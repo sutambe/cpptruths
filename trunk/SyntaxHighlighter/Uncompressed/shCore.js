@@ -47,10 +47,42 @@ dp.sh.Toolbar.Commands = {
 		check: function(highlighter) { return highlighter.collapse; },
 		func: function(sender, highlighter)
 		{
+			// dan's hack for expand collapse toggle.
+			var a = document.createElement("a");
+			a.setAttribute('href', '#');
+			a.onclick = function() {
+			dp.sh.Toolbar.Command('CollapseSource',this);
+			return false;
+			}
+			a.appendChild(document.createTextNode("- collapse source"));
+			sender.parentNode.insertBefore(a, sender);
+			// end hack section
+			
 			sender.parentNode.removeChild(sender);
 			highlighter.div.className = highlighter.div.className.replace('collapsed', '');
 		}
 	},
+
+	// dan's hack for expand collapse toggle.    
+	CollapseSource: {
+		label: '- collapse source',
+		check: function(highlighter) { return false; },
+		func: function(sender, highlighter)
+		{
+			var a = document.createElement("a");
+			a.setAttribute('href', '#');
+			a.onclick = function() {
+				dp.sh.Toolbar.Command('ExpandSource',this);
+				return false;
+			}
+			a.appendChild(document.createTextNode("+ expand source"));
+			sender.parentNode.insertBefore(a, sender);
+			sender.parentNode.removeChild(sender);
+			highlighter.div.className = highlighter.div.className + ' collapsed';
+		}
+	},
+	// end dan's hack
+
 	
 	// opens a new windows and puts the original unformatted source code inside.
 	ViewSource: {
