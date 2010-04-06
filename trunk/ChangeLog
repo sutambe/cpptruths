@@ -1,4 +1,41 @@
-Mon Apr  5 22:32:53 CDT 2010
+Mon Apr  5 23:10:09 CDT 2010 Sumant Tambe
+
+  * SyntaxHighlighter
+  * SyntaxHighlighter/Uncompressed
+  * SyntaxHighlighter/Uncompressed/shBrushCSharp.js
+  * SyntaxHighlighter/Uncompressed/shBrushCss.js
+  * SyntaxHighlighter/Uncompressed/shBrushPython.js
+  * SyntaxHighlighter/Uncompressed/shBrushDelphi.js
+  * SyntaxHighlighter/Uncompressed/shCore.js
+  * SyntaxHighlighter/Uncompressed/shBrushCpp.js
+  * SyntaxHighlighter/Uncompressed/shBrushXml.js
+  * SyntaxHighlighter/Uncompressed/shBrushJScript.js
+  * SyntaxHighlighter/Uncompressed/shBrushRuby.js
+  * SyntaxHighlighter/Uncompressed/shBrushSql.js
+  * SyntaxHighlighter/Uncompressed/shBrushVb.js
+  * SyntaxHighlighter/Uncompressed/shBrushJava.js
+  * SyntaxHighlighter/Uncompressed/shBrushPhp.js
+  * SyntaxHighlighter/Scripts
+  * SyntaxHighlighter/Scripts/shBrushCSharp.js
+  * SyntaxHighlighter/Scripts/shBrushCss.js
+  * SyntaxHighlighter/Scripts/shBrushPython.js
+  * SyntaxHighlighter/Scripts/shBrushDelphi.js
+  * SyntaxHighlighter/Scripts/shCore.js
+  * SyntaxHighlighter/Scripts/shBrushCpp.js
+  * SyntaxHighlighter/Scripts/shBrushXml.js
+  * SyntaxHighlighter/Scripts/clipboard.swf
+  * SyntaxHighlighter/Scripts/shBrushJScript.js
+  * SyntaxHighlighter/Scripts/shBrushRuby.js
+  * SyntaxHighlighter/Scripts/shBrushSql.js
+  * SyntaxHighlighter/Scripts/shBrushVb.js
+  * SyntaxHighlighter/Scripts/shBrushJava.js
+  * SyntaxHighlighter/Scripts/shBrushPhp.js
+  * SyntaxHighlighter/Styles
+  * SyntaxHighlighter/Styles/SyntaxHighlighter.css
+
+    Added SyntaxHighlighter.
+
+Mon Apr  5 22:32:53 CDT 2010 Sumant Tambe
 
   * ChangeLog
   * src
