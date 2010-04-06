@@ -1,3 +1,9 @@
+Tue Apr  6 00:07:27 CDT 2010 Sumant Tambe
+
+  * SyntaxHighlighter/Styles/SyntaxHighlighter.css
+
+    Improved syntax highlighting
+
 Mon Apr  5 23:10:09 CDT 2010 Sumant Tambe
 
   * SyntaxHighlighter
@@ -42,6 +48,4 @@ Mon Apr  5 22:32:53 CDT 2010 Sumant Tambe
   * src/Transposer.cpp
 
   Added a ChangeLog file and first nifty C++ source of generic Transposer.
-
-
 
