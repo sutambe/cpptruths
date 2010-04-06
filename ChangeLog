@@ -1,3 +1,14 @@
+Tue Apr  6 15:21:28 CDT 2010 Sumant Tambe
+
+  * c
+  * cpp
+  * cpp/Transposer.cpp
+  * ChangeLog
+  * src
+  * src/Transposer.cpp
+
+    Added directories c and cpp
+
 Tue Apr  6 00:07:27 CDT 2010 Sumant Tambe
 
   * SyntaxHighlighter/Styles/SyntaxHighlighter.css
