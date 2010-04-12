@@ -1,0 +1,7 @@
+all: ace_cdr_test
+
+ace_cdr_test: ace_cdr_test.cpp 
+	g++ ace_cdr_test.cpp -o ace_cdr_test -Wall -I $(ACE_ROOT) -L $(ACE_ROOT)/lib -lACE
+
+clean:
+	rm -f ace_cdr_test

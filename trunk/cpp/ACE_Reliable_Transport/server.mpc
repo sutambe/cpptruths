@@ -1,0 +1,15 @@
+// $Id$
+// project name is optional.  It depends on the ACE library.
+project (server): acelib {
+   exename = server
+
+   Header_Files {
+      proto_handler.h
+   }
+
+   Source_Files {
+      proto_handler.cpp
+      server.cpp
+   }
+}
+

@@ -1,0 +1,8 @@
+all: async_connector
+
+async_connector: async_connector.cpp 
+	g++ -g async_connector.cpp -o async_connector -Wall \
+          -I $(ACE_ROOT) -L $(ACE_ROOT)/lib -lACE \
+          -I /usr/local41/include/boost-1_33_1 
+clean:
+	rm -f async_connector
