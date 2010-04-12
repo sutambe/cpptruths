@@ -34,8 +34,8 @@
             <outline text="Blog Entries for Walter Bright"
                 title="Blog Entries for Walter Bright" type="rss"
                 xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=WalterBright&amp;Itemid=29&amp;task=rss" htmlUrl="http://dobbscodetalk.com"/>
-            <outline text="C++ &amp;amp; Boost"
-                title="C++ &amp;amp; Boost" type="rss"
+            <outline text="C++ &amp;Boost"
+                title="C++ &amp;Boost" type="rss"
                 xmlUrl="http://cppboost.blogspot.com/feeds/posts/default" htmlUrl="http://cppboost.blogspot.com/"/>
             <outline text="C++ - Stack Overflow"
                 title="C++ - Stack Overflow" type="rss"
@@ -54,6 +54,10 @@
             <outline text="cplusplus.mattters.com Google feed"
                 title="cplusplus.mattters.com Google feed" type="rss"
                 xmlUrl="http://www.google.com/reader/public/atom/webfeed/1638859373976348496" htmlUrl="http://cplusplus.mattters.com/"/>
+            <outline text="Dr.Dobb's C++ Articles" title="Dr.Dobb's C++
+                Articles" type="rss"
+                xmlUrl="http://www.drdobbs.com/rss/cpp.xml"
+                htmlUrl="http://www.drdobbs.com"/>
             <outline text="InformIT :: C++ Reference Guide"
                 title="InformIT :: C++ Reference Guide" type="rss"
                 xmlUrl="http://www.informit.com/guides/guide_rss.aspx?g=cplusplus" htmlUrl="http://www.informit.com"/>
