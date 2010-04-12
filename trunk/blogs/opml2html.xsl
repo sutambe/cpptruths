@@ -2,7 +2,7 @@
   <xsl:output method="html" indent="yes" omit-xml-declaration="yes" />
 
   <xsl:template match="opml/head" >
-    <head><title>Sumant's <xsl:value-of select="title"/>
+    <head><title><xsl:value-of select="title"/>
     </title></head>
      <h2><font color="red"><xsl:value-of select="title"/></font></h2> 
      Date created: <xsl:value-of select="dateCreated"/>
