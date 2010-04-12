@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="opml2html.xsl"?>
+<opml version="1.1">
+<head>
+    <title>Bloglines Subscriptions</title>
+    <dateCreated>Wed, 10 Mar 2010 23:25:04 GMT</dateCreated>
+    <ownerName></ownerName>
+</head>
+<body>
+   <outline title="Bloglines | News" text="Bloglines | News" htmlUrl="http://www.bloglines.com" type="rss" xmlUrl="http://www.bloglines.com/rss/about/news" />
+  <outline text="Podcasts Business" >
+       <outline title="TIME Financial Toolkit" text="TIME Financial Toolkit" htmlUrl="http://www.time.com/podcast" type="rss" xmlUrl="http://rss.time.com/web/time/rss/podcast/rss_bizpodcast.xml" />
+       <outline title="Deloitte Insights Podcast" text="Deloitte Insights Podcast" htmlUrl="http://www.deloitte.com/us/podcasts" type="rss" xmlUrl="http://feeds.feedburner.com/Deloitteinsights" />
+       <outline title="Bloomberg Columnists" text="Bloomberg Columnists" htmlUrl="http://www.bloomberg.com/tvradio/podcast/" type="rss" xmlUrl="http://www.bloomberg.com/tvradio/podcast/opinions.xml" />
+       <outline title="Gartner Voice" text="Gartner Voice" htmlUrl="http://www.gartner.com/it/products/podcasting/asset_137461_2616.jsp" type="rss" xmlUrl="http://www.gartner.com/it/products/podcasting/rss/asset_137461_2635.xml" />
+       <outline title="BusinessWeek -- Global Outlook" text="BusinessWeek -- Global Outlook" htmlUrl="http://www.businessweek.com" type="rss" xmlUrl="http://www.businessweek.com/search/podcasts/international.rss" />
+       <outline title="CNN Marketplace Update" text="CNN Marketplace Update" htmlUrl="http://www.cnn.com/services/podcasting?eref=marketplace" type="rss" xmlUrl="http://rss.cnn.com/services/podcasting/marketplace/rss.xml" />
+       <outline title="Bloomberg On the Economy" text="Bloomberg On the Economy" htmlUrl="http://www.bloomberg.com/tvradio/podcast/" type="rss" xmlUrl="http://www.bloomberg.com/tvradio/podcast/ontheeconomy.xml" />
+       <outline title="Forbes.com Notes On The News" text="Forbes.com Notes On The News" htmlUrl="http://notes-on-the-news" type="rss" xmlUrl="http://www.forbes.com/video/static/xml/showRssFeeds/32.xml" />
+       <outline title="Forbes.com Technology" text="Forbes.com Technology" htmlUrl="http://www.forbes.com/video" type="rss" xmlUrl="http://www.forbes.com/video/static/xml/showRssFeeds/44.xml" />
+       <outline title="Forbes.com StreetTalk" text="Forbes.com StreetTalk" htmlUrl="http://streettalk" type="rss" xmlUrl="http://www.forbes.com/video/static/xml/showRssFeeds/43.xml" />
+    </outline>
+  <outline text="Magazines" >
+       <outline title="ACM Queue - All Queue Content" text="ACM Queue - All Queue Content" htmlUrl="http://queue.acm.org/Articles" type="rss" xmlUrl="http://acmqueue.com/queue.xml" />
+       <outline title="Technology Review Feed - Infotech Top Stories" text="Technology Review Feed - Infotech Top Stories" htmlUrl="http://www.technologyreview.com/InfoTech" type="rss" xmlUrl="http://feeds.pheedo.com/technology_review_infotech" />
+       <outline title="Dr. Dobb's CodeTalk" text="Dr. Dobb's CodeTalk" htmlUrl="http://dobbscodetalk.com" type="rss" xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;task=rss" />
+    </outline>
+  <outline text="CNN" >
+       <outline title="CNN.com" text="CNN.com" htmlUrl="http://www.cnn.com/?eref=rss_topstories" type="rss" xmlUrl="http://rss.cnn.com/rss/cnn_topstories.rss" />
+       <outline title="CNN.com - World" text="CNN.com - World" htmlUrl="http://www.cnn.com/WORLD/?eref=rss_world" type="rss" xmlUrl="http://rss.cnn.com/rss/cnn_world.rss" />
+       <outline title="CNN.com - U.S." text="CNN.com - U.S." htmlUrl="http://www.cnn.com/US/?eref=rss_us" type="rss" xmlUrl="http://rss.cnn.com/rss/cnn_us.rss" />
+       <outline title="CNN.com - Technology" text="CNN.com - Technology" htmlUrl="http://www.cnn.com/TECH/?eref=rss_tech" type="rss" xmlUrl="http://rss.cnn.com/rss/cnn_tech.rss" />
+       <outline title="CNN.com - Most Popular" text="CNN.com - Most Popular" htmlUrl="http://www.cnn.com/mostpopular/?eref=rss_mostpopular" type="rss" xmlUrl="http://rss.cnn.com/rss/cnn_mostpopular.rss" />
+    </outline>
+  <outline text="Podcasts Tech" >
+       <outline title="Dr. Dobb's Podcast" text="Dr. Dobb's Podcast" htmlUrl="http://syndication.sdmediagroup.com/feeds/public/cmp_podcast_all.xml" type="rss" xmlUrl="http://syndication.sdmediagroup.com/feeds/public/cmp_podcast_all.xml" />
+       <outline title="Software Engineering Radio - The Podcast for Professional Softwa" text="Software Engineering Radio - The Podcast for Professional Softwa" htmlUrl="http://www.se-radio.net" type="rss" xmlUrl="http://www.se-radio.net/rss" />
+       <outline title="Software Development Magazine" text="Software Development Magazine" htmlUrl="http://www.sdmagazine.com/" type="rss" xmlUrl="http://syndication.sdmediagroup.com/feeds/public/cmp_podcast_sdm.xml" />
+       <outline title="ACM Queue - audiocasts" text="ACM Queue - audiocasts" htmlUrl="http://queue.acm.org/listing.cfm?sort=publication_date&amp;order=desc&amp;item_topic=all&amp;qc_type=audiocasts&amp;filter=all&amp;page_title=Audiocasts" type="rss" xmlUrl="http://acmqueue.com/queuecasts.xml" />
+       <outline title="podcasts - Channel 9" text="podcasts - Channel 9" htmlUrl="http://channel9.msdn.com/Media/Podcasts/" type="rss" xmlUrl="http://channel9.msdn.com/Media/Podcasts/feed/mp3/" />
+       <outline title="Microsoft TechNet Radio" text="Microsoft TechNet Radio" htmlUrl="http://www.microsoft.com/tnradio" type="rss" xmlUrl="http://www.microsoft.com/winme/0512/25568/TechNet_Radio_MP3.xml" />
+       <outline title="videos - Channel 9" text="videos - Channel 9" htmlUrl="http://channel9.msdn.com/Media/Videos/" type="rss" xmlUrl="http://channel9.msdn.com/Media/Videos/feed/wmv/" />
+       <outline title="OnSoftware" text="OnSoftware" htmlUrl="http://www.informit.com/podcasts/channel.aspx?c=dadf92ca-3bdc-484e-9cd8-cbfe0cfc0de6" type="rss" xmlUrl="http://www.informit.com/podcasts/index_rss.aspx?c=7" />
+       <outline title="OnMicrosoft" text="OnMicrosoft" htmlUrl="http://www.informit.com/podcasts/channel.aspx?c=3761c00b-ef8f-4385-9b08-a6e1c7a9a35f" type="rss" xmlUrl="http://www.informit.com/podcasts/index_rss.aspx?c=8" />
+    </outline>
+  <outline text="Economist" >
+       <outline title="The Economist Video All Channels" text="The Economist Video All Channels" htmlUrl="http://audiovideo.economist.com/?rf=rss" type="rss" xmlUrl="http://public-xml.feedroom.com/public_rss/economist_rss.xml?hvar=http://audiovideo.economist.com/" />
+       <outline title="The Economist  Audio" text="The Economist  Audio" htmlUrl="http://www.economist.com" type="rss" xmlUrl="http://www.economist.com/media/rss/economist.xml" />
+       <outline title="Economist - Full print edition" text="Economist - Full print edition" htmlUrl="http://www.economist.com/" type="rss" xmlUrl="http://www.economist.com/rss/Full_print_edition_rss.xml" />
+       <outline title="Economist - The internet" text="Economist - The internet" htmlUrl="http://www.economist.com/" type="rss" xmlUrl="http://www.economist.com/rss/the_internet_rss.xml" />
+       <outline title="Economist - China's economy" text="Economist - China's economy" htmlUrl="http://www.economist.com/" type="rss" xmlUrl="http://www.economist.com/rss/chinas_economy_rss.xml" />
+    </outline>
+  <outline text="Times of India" >
+       <outline title="India Business News | Business News - Times of India" text="India Business News | Business News - Times of India" htmlUrl="http://timesofindia.indiatimes.com/articlelist/-2128682902.cms" type="rss" xmlUrl="http://timesofindia.indiatimes.com/rssfeeds/-2128682902.cms" />
+       <outline title="Bombay Times - City - The Times of India" text="Bombay Times - City - The Times of India" htmlUrl="http://timesofindia.indiatimes.com" type="rss" xmlUrl="http://timesofindia.indiatimes.com/rssfeeds/1225119221.cms" />
+    </outline>
+  <outline text="My C++" >
+       <outline title="FeedBulletin for: sutambe" text="FeedBulletin for: sutambe" htmlUrl="http://feedburner.google.com/fb/a/home" type="rss" xmlUrl="http://feeds2.feedburner.com/~u/06108331285056884370" />
+       <outline title="Blogspot - C++ Truths" text="Blogspot - C++ Truths" htmlUrl="http://cpptruths.blogspot.com/" type="rss" xmlUrl="http://cpptruths.blogspot.com/atom.xml" />
+       <outline title="FeedBurner - C++ Truths" text="FeedBurner - C++ Truths" htmlUrl="http://cpptruths.blogspot.com/" type="rss" xmlUrl="http://feeds.feedburner.com/CppTruths" />
+       <outline title="Delicious/url/2694c9a63e7afc7539e6a2a15aa8effd" text="Delicious/url/2694c9a63e7afc7539e6a2a15aa8effd" htmlUrl="http://delicious.com/url/2694c9a63e7afc7539e6a2a15aa8effd" type="rss" xmlUrl="http://feeds.delicious.com/rss/url/2694c9a63e7afc7539e6a2a15aa8effd" />
+       <outline title="FeedBurner - &quot;More C++ Idioms&quot; - Wikibook Updates" text="FeedBurner - &quot;More C++ Idioms&quot; - Wikibook Updates" htmlUrl="http://en.wikibooks.org/wiki/Special:RecentChangesLinked" type="rss" xmlUrl="http://feeds.feedburner.com/MoreCppIdiomsWikibook" />
+       <outline title="Wikibooks  - Changes related to &quot;More C++ Idioms&quot; [en]" text="Wikibooks  - Changes related to &quot;More C++ Idioms&quot; [en]" htmlUrl="http://en.wikibooks.org/wiki/Special:RecentChangesLinked" type="rss" xmlUrl="http://en.wikibooks.org/w/index.php?title=Special:RecentChangesLinked&amp;feed=rss&amp;target=More+C%2B%2B+Idioms" />
+       <outline title="FeedBulletin for: sutambe" text="FeedBulletin for: sutambe" htmlUrl="http://www.feedburner.com/fb/a/home" type="rss" xmlUrl="http://feeds.feedburner.com/~u/sutambe" />
+       <outline title="Google Alerts - &quot;More C++ Idioms&quot;" text="Google Alerts - &quot;More C++ Idioms&quot;" htmlUrl="" type="rss" xmlUrl="http://www.google.com/alerts/feeds/02965874593292426771/14840535976236471228" />
+       <outline title="Google Alerts - &quot;C++ Truths&quot;" text="Google Alerts - &quot;C++ Truths&quot;" htmlUrl="" type="rss" xmlUrl="http://www.google.com/alerts/feeds/02965874593292426771/17198681191710275043" />
+    </outline>
+  <outline text="Cartoons" >
+       <outline title="Dilbert Daily Strip" text="Dilbert Daily Strip" htmlUrl="http://dilbert.com/" type="rss" xmlUrl="http://feeds.feedburner.com/DilbertDailyStrip" />
+       <outline title="Liberal American Cartoons from Cagle.com" text="Liberal American Cartoons from Cagle.com" htmlUrl="http://rss.cagle.com/cagle/topic.aspx?topic=EnUsLib" type="rss" xmlUrl="http://rss.cagle.com/cagle/topic/EnUsLib.xml" />
+       <outline title="PHD Comics" text="PHD Comics" htmlUrl="http://www.phdcomics.com" type="rss" xmlUrl="http://www.phdcomics.com/gradfeed.php" />
+       <outline title="Quotes of the Day" text="Quotes of the Day" htmlUrl="http://www.quotationspage.com/qotd.html" type="rss" xmlUrl="http://www.quotationspage.com/data/qotd.rss" />
+    </outline>
+  <outline text="SOA-Cloud" >
+       <outline title="whurley's blog" text="whurley's blog" htmlUrl="http://www.infoworld.com/blogs/whurley" type="rss" xmlUrl="http://www.infoworld.com/blogs/whurley/feed" />
+       <outline title="Dave Linthicum's blog" text="Dave Linthicum's blog" htmlUrl="http://www.infoworld.com/blogs/dave-linthicum" type="rss" xmlUrl="http://www.infoworld.com/blogs/dave-linthicum/feed" />
+       <outline title="cloud computing" text="cloud computing" htmlUrl="http://cloudcomputing.blogspot.com/" type="rss" xmlUrl="http://cloudcomputing.blogspot.com/feeds/posts/default" />
+       <outline title="Grid Designer's Blog" text="Grid Designer's Blog" htmlUrl="http://blog.griddynamics.com/" type="rss" xmlUrl="http://feeds.feedburner.com/griddynamics" />
+       <outline title="Google Research Blog" text="Google Research Blog" htmlUrl="http://googleresearch.blogspot.com/" type="rss" xmlUrl="http://feeds2.feedburner.com/blogspot/gJZg" />
+       <outline title="Windows Azure" text="Windows Azure" htmlUrl="http://blogs.msdn.com/windowsazure/default.aspx" type="rss" xmlUrl="http://blogs.msdn.com/windowsazure/rss.xml" />
+       <outline title="Cloud Tools Team" text="Cloud Tools Team" htmlUrl="http://blogs.msdn.com/cloud/default.aspx" type="rss" xmlUrl="http://blogs.msdn.com/cloud/rss.xml" />
+       <outline title="High Scalability" text="High Scalability" htmlUrl="http://highscalability.com" type="rss" xmlUrl="http://highscalability.com/rss.xml" />
+    </outline>
+  <outline text="Economic Times" >
+       <outline title="Finance-Economy-News-The Economic Times" text="Finance-Economy-News-The Economic Times" htmlUrl="http://economictimes.indiatimes.com" type="rss" xmlUrl="http://economictimes.indiatimes.com/rssfeeds/1286551815.cms" />
+       <outline title="Internet-Infotech-The Economic Times" text="Internet-Infotech-The Economic Times" htmlUrl="http://economictimes.indiatimes.com" type="rss" xmlUrl="http://economictimes.indiatimes.com/rssfeeds/13357549.cms" />
+       <outline title="Software-Infotech-The Economic Times" text="Software-Infotech-The Economic Times" htmlUrl="http://economictimes.indiatimes.com" type="rss" xmlUrl="http://economictimes.indiatimes.com/rssfeeds/13357555.cms" />
+       <outline title="Hardware-Infotech-The Economic Times" text="Hardware-Infotech-The Economic Times" htmlUrl="http://economictimes.indiatimes.com" type="rss" xmlUrl="http://economictimes.indiatimes.com/rssfeeds/13357565.cms" />
+       <outline title="Investor's Guide-Features-The Economic Times" text="Investor's Guide-Features-The Economic Times" htmlUrl="http://economictimes.indiatimes.com" type="rss" xmlUrl="http://economictimes.indiatimes.com/rssfeeds/2026181286.cms" />
+    </outline>
+  <outline text="Google" >
+       <outline title="The Official Google Blog" text="The Official Google Blog" htmlUrl="http://googleblog.blogspot.com/" type="rss" xmlUrl="http://googleblog.blogspot.com/atom.xml" />
+    </outline>
+  <outline text="Daily" >
+       <outline title="Gallup Daily" text="Gallup Daily" htmlUrl="http://www.gallup.com/" type="rss" xmlUrl="http://www.gallup.com/tag/Gallup+Daily.rss" />
+       <outline title="Slashdot" text="Slashdot" htmlUrl="http://slashdot.org/" type="rss" xmlUrl="http://rss.slashdot.org/slashdot/eqWf" />
+       <outline title="Video - CNNMoney.com" text="Video - CNNMoney.com" htmlUrl="" type="rss" xmlUrl="http://rss.cnn.com/rss/money_video_business.rss" />
+       <outline title="IBN Top Videos" text="IBN Top Videos" htmlUrl="" type="rss" xmlUrl="http://ibnlive.in.com/xml/topvideo.xml" />
+       <outline title="CNN=Politics Daily (Video)" text="CNN=Politics Daily (Video)" htmlUrl="http://www.cnn.com/services/podcasting?eref=bestpolitics" type="rss" xmlUrl="http://rss.cnn.com/services/podcasting/bestpolitics/rss" />
+    </outline>
+  <outline text="Experts" >
+       <outline title="Robert C. Martin's Weblog" text="Robert C. Martin's Weblog" htmlUrl="http://www.artima.com/weblogs/index.jsp?blogger=unclebob" type="rss" xmlUrl="http://www.artima.com/weblogs/feeds/bloggers/unclebob.rss" />
+       <outline title="Middleware Matters" text="Middleware Matters" htmlUrl="http://blogs.iona.com/vinoski/" type="rss" xmlUrl="http://www.iona.com/blogs/vinoski/index.xml" />
+       <outline title="Tim O'Reilly's Archive" text="Tim O'Reilly's Archive" htmlUrl="http://tim.oreilly.com/" type="rss" xmlUrl="http://www.oreillynet.com/pub/feed/28?format=rss2" />
+       <outline title="Service-oriented Architecture: Insights and Best Practices" text="Service-oriented Architecture: Insights and Best Practices" htmlUrl="http://www.ibm.com/developerworks/blogs/page/AliArsanjani" type="rss" xmlUrl="http://www-03.ibm.com/developerworks/blogs/rss/AliArsanjani?flavor=rssdw" />
+       <outline title="Industry Standards, XML and Web services, distributed computing," text="Industry Standards, XML and Web services, distributed computing," htmlUrl="https://www.ibm.com/developerworks/mydeveloperworks/blogs/chrisferris" type="rss" xmlUrl="http://www-03.ibm.com/developerworks/blogs/rss/chrisferris?flavor=rssdw" />
+       <outline title="Jon Udell" text="Jon Udell" htmlUrl="http://blog.jonudell.net" type="rss" xmlUrl="http://blog.jonudell.net/feed/" />
+       <outline title="Martin Fowler" text="Martin Fowler" htmlUrl="http://martinfowler.com" type="rss" xmlUrl="http://martinfowler.com/bliki/bliki.atom" />
+       <outline title="Adding Simplicity - An Engineering Mantra" text="Adding Simplicity - An Engineering Mantra" htmlUrl="http://www.addsimplicity.com/adding_simplicity_an_engi/" type="rss" xmlUrl="http://www.addsimplicity.com/adding_simplicity_an_engi/index.rdf" />
+       <outline title="Joel on Software" text="Joel on Software" htmlUrl="http://www.joelonsoftware.com" type="rss" xmlUrl="http://www.joelonsoftware.com/rss.xml" />
+       <outline title="Hitchhiker's Guide to Software Architecture and Everything Else " text="Hitchhiker's Guide to Software Architecture and Everything Else " htmlUrl="http://stal.blogspot.com/" type="rss" xmlUrl="http://stal.blogspot.com/atom.xml" />
+       <outline title="James O. Coplien's Weblog" text="James O. Coplien's Weblog" htmlUrl="http://www.artima.com/weblogs/index.jsp?blogger=cope" type="rss" xmlUrl="http://www.artima.com/weblogs/feeds/bloggers/cope.rss" />
+       <outline title="Professor Sadagopan's Weblog" text="Professor Sadagopan's Weblog" htmlUrl="http://ss.emergic.org" type="rss" xmlUrl="http://ss.emergic.org/feed/" />
+       <outline title="Dean Wampler's Mind" text="Dean Wampler's Mind" htmlUrl="http://blog.aspectprogramming.com/" type="rss" xmlUrl="http://blog.aspectprogramming.com/xml/atom10/feed.xml" />
+       <outline title="All Things Distributed" text="All Things Distributed" htmlUrl="http://www.allthingsdistributed.com/" type="rss" xmlUrl="http://www.allthingsdistributed.com/atom.xml" />
+       <outline title="Lambda the Ultimate - Programming Languages Weblog" text="Lambda the Ultimate - Programming Languages Weblog" htmlUrl="http://lambda-the-ultimate.org" type="rss" xmlUrl="http://lambda-the-ultimate.org/rss.xml" />
+       <outline title="Grammarware, Haskellware, XMLware" text="Grammarware, Haskellware, XMLware" htmlUrl="" type="rss" xmlUrl="http://blogs.msdn.com/ralflammel/rss.xml" />
+    </outline>
+  <outline text="C++" >
+       <outline title="snelson.org.uk/john" text="snelson.org.uk/john" htmlUrl="http://snelson.org.uk//john" type="rss" xmlUrl="http://snelson.org.uk/john/atom.xml" />
+       <outline title="A Sense of Design" text="A Sense of Design" htmlUrl="http://codesynthesis.com/~boris/blog" type="rss" xmlUrl="http://codesynthesis.com/~boris/blog/feed/" />
+       <outline title="Learning C++" text="Learning C++" htmlUrl="http://learningcppisfun.blogspot.com/" type="rss" xmlUrl="http://learningcppisfun.blogspot.com/feeds/posts/default?alt=rss" />
+       <outline title="The Fastware Project" text="The Fastware Project" htmlUrl="http://fastwareproject.blogspot.com/" type="rss" xmlUrl="http://fastwareproject.blogspot.com/feeds/posts/default?alt=rss" />
+       <outline title="About.com C / C++ / C#" text="About.com C / C++ / C#" htmlUrl="http://cplus.about.com/" type="rss" xmlUrl="http://z.about.com/6/g/cplus/b/rss2.xml" />
+       <outline title="Attractive Chaos" text="Attractive Chaos" htmlUrl="http://attractivechaos.wordpress.com" type="rss" xmlUrl="http://attractivechaos.wordpress.com/feed/" />
+       <outline title="Just Software Solutions Blog" text="Just Software Solutions Blog" htmlUrl="" type="rss" xmlUrl="http://www.justsoftwaresolutions.co.uk/index.rss" />
+       <outline title="Thinking Asynchronously in C++" text="Thinking Asynchronously in C++" htmlUrl="" type="rss" xmlUrl="http://think-async.blogspot.com/feeds/posts/default?alt=rss" />
+       <outline title="Blog Entries for Andrew Koenig" text="Blog Entries for Andrew Koenig" htmlUrl="http://dobbscodetalk.com" type="rss" xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=andrewk&amp;task=rss" />
+       <outline title="Northwest C++ Users Group" text="Northwest C++ Users Group" htmlUrl="http://www.nwcpp.org" type="rss" xmlUrl="http://www.nwcpp.org/rss.xml" />
+       <outline title="Stan Lippman's BLog" text="Stan Lippman's BLog" htmlUrl="" type="rss" xmlUrl="http://blogs.msdn.com/slippman/rss.xml" />
+       <outline title="Articles published in The C++ Source" text="Articles published in The C++ Source" htmlUrl="http://www.artima.com/" type="rss" xmlUrl="http://www.artima.com/cppsource/feeds/cppsource.rss" />
+       <outline title="Sutter's Mill" text="Sutter's Mill" htmlUrl="http://herbsutter.wordpress.com" type="rss" xmlUrl="http://herbsutter.wordpress.com/feed/" />
+       <outline title="Matthew Wilson's Weblog" text="Matthew Wilson's Weblog" htmlUrl="http://www.artima.com/weblogs/index.jsp?blogger=bigboy" type="rss" xmlUrl="http://www.artima.com/weblogs/feeds/bloggers/bigboy.rss" />
+       <outline title="InformIT :: C++ Reference Guide" text="InformIT :: C++ Reference Guide" htmlUrl="http://www.informit.com" type="rss" xmlUrl="http://www.informit.com/guides/guide_rss.aspx?g=cplusplus" />
+       <outline title="The Software Patterns Blog" text="The Software Patterns Blog" htmlUrl="http://pattern.ijop.org" type="rss" xmlUrl="http://pattern.ijop.org/?feed=rss2" />
+       <outline title="Visual C++ Team Blog" text="Visual C++ Team Blog" htmlUrl="" type="rss" xmlUrl="http://blogs.msdn.com/vcblog/rss.xml" />
+       <outline title="Mike Stall's .NET Debugging Blog" text="Mike Stall's .NET Debugging Blog" htmlUrl="http://blogs.msdn.com/jmstall/default.aspx" type="rss" xmlUrl="http://blogs.msdn.com/jmstall/rss.xml" />
+       <outline title="C++ Soup!" text="C++ Soup!" htmlUrl="http://cplusplus-soup.com" type="rss" xmlUrl="http://feeds.feedburner.com/CppSoup" />
+       <outline title="ConceptGCC Developer Blog" text="ConceptGCC Developer Blog" htmlUrl="http://conceptgcc.wordpress.com" type="rss" xmlUrl="http://conceptgcc.wordpress.com/feed/" />
+       <outline title="Meditation, The Art of Exploitation" text="Meditation, The Art of Exploitation" htmlUrl="http://meditation-art.blogspot.com/" type="rss" xmlUrl="http://meditation-art.blogspot.com/atom.xml" />
+       <outline title="OnSoftware (audio)" text="OnSoftware (audio)" htmlUrl="http://www.informit.com/podcasts/channel.aspx?c=dadf92ca-3bdc-484e-9cd8-cbfe0cfc0de6" type="rss" xmlUrl="http://www.podango.com/feeds/feed.php?pid=2243&amp;amid=1&amp;returnType=all/index.xml" />
+       <outline title="Parallel Programming in Native Code" text="Parallel Programming in Native Code" htmlUrl="" type="rss" xmlUrl="http://blogs.msdn.com/nativeconcurrency/rss.xml" />
+       <outline title="The C++ and Boost Code Shop" text="The C++ and Boost Code Shop" htmlUrl="http://shoddykid.blogspot.com/" type="rss" xmlUrl="http://shoddykid.blogspot.com/feeds/posts/default" />
+       <outline title="/* Rambling comments... */" text="/* Rambling comments... */" htmlUrl="http://www.lenholgate.com/" type="rss" xmlUrl="http://www.lenholgate.com/index.rdf" />
+       <outline title="mr-edd.co.uk" text="mr-edd.co.uk" htmlUrl="http://www.mr-edd.co.uk" type="rss" xmlUrl="http://www.mr-edd.co.uk/?feed=rss2" />
+       <outline title="The C++ and Boost Code Shop" text="The C++ and Boost Code Shop" htmlUrl="http://shoddykid.blogspot.com/" type="rss" xmlUrl="http://shoddykid.blogspot.com/feeds/posts/default?alt=rss" />
+       <outline title="ACCU  :: Journal Articles" text="ACCU  :: Journal Articles" htmlUrl="http://accu.org/index.php/journals/c78/" type="rss" xmlUrl="http://accu.org/index.php/journals/c78/?theme=rss" />
+       <outline title="Advanced C++ with Examples" text="Advanced C++ with Examples" htmlUrl="http://advancedcppwithexamples.blogspot.com/" type="rss" xmlUrl="http://advancedcppwithexamples.blogspot.com/feeds/posts/default?alt=rss" />
+       <outline title="SlashSlash" text="SlashSlash" htmlUrl="http://slashslash.info/" type="rss" xmlUrl="http://slashslash.info/rss.xml" />
+       <outline title="CodeGuru.com" text="CodeGuru.com" htmlUrl="http://www.codeguru.com/" type="rss" xmlUrl="http://feeds.feedburner.com/codeguru/cpp" />
+       <outline title="Blog Entries for Walter Bright" text="Blog Entries for Walter Bright" htmlUrl="http://dobbscodetalk.com" type="rss" xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=WalterBright&amp;Itemid=29&amp;task=rss" />
+       <outline title="Visual C++ Tips" text="Visual C++ Tips" htmlUrl="" type="rss" xmlUrl="http://weseetips.com/feed/" />
+       <outline title="  Bartosz Milewski's Programming Cafe" text="  Bartosz Milewski's Programming Cafe" htmlUrl="http://bartoszmilewski.wordpress.com" type="rss" xmlUrl="http://bartoszmilewski.wordpress.com/feed/" />
+       <outline title="cplusplus.co.il" text="cplusplus.co.il" htmlUrl="" type="rss" xmlUrl="http://cplusplus.co.il/feed/" />
+       <outline title="The lone C++ coder's blog" text="The lone C++ coder's blog" htmlUrl="http://codeblog.bsdninjas.co.uk/" type="rss" xmlUrl="http://codeblog.bsdninjas.co.uk/index.php?/feeds/index.rss2" />
+       <outline title="active questions tagged c++ - Stack Overflow" text="active questions tagged c++ - Stack Overflow" htmlUrl="http://stackoverflow.com/questions/tagged/?tagnames=c%2b%2b&amp;sort=active" type="rss" xmlUrl="http://stackoverflow.com/feeds/tag/c++" />
+       <outline title="Systemfault's Weblog" text="Systemfault's Weblog" htmlUrl="http://debugfailure.wordpress.com" type="rss" xmlUrl="http://debugfailure.wordpress.com/feed/" />
+       <outline title="C++ &amp;amp; Boost" text="C++ &amp;amp; Boost" htmlUrl="http://cppboost.blogspot.com/" type="rss" xmlUrl="http://cppboost.blogspot.com/feeds/posts/default" />
+       <outline title="C++Next" text="C++Next" htmlUrl="http://cpp-next.com" type="rss" xmlUrl="http://cpp-next.com/feed/" />
+       <outline title="Reddit C++" text="Reddit C++" htmlUrl="http://www.reddit.com/r/cpp/" type="rss" xmlUrl="http://www.reddit.com/r/cpp/.rss" />
+    </outline>
+  <outline text="Modeling" >
+       <outline title="Modeling Eclipse" text="Modeling Eclipse" htmlUrl="http://eclipse-modeling.blogspot.com/" type="rss" xmlUrl="http://eclipse-modeling.blogspot.com/atom.xml" />
+       <outline title="Steven Kelly on DSM" text="Steven Kelly on DSM" htmlUrl="http://www.metacase.com/blogs/stevek/blogView" type="rss" xmlUrl="http://www.metacase.com/blogs/stevek/stevek-rss.xml" />
+       <outline title="Juha-Pekka on DSM" text="Juha-Pekka on DSM" htmlUrl="http://www.metacase.com/blogs/jpt/blogView" type="rss" xmlUrl="http://www.metacase.com/blogs/jpt/jpt-rss.xml" />
+       <outline title="Software Chimps" text="Software Chimps" htmlUrl="http://softwarechimps.blogspot.com/" type="rss" xmlUrl="http://feeds.feedburner.com/SoftwareChimps" />
+       <outline title="stuart kent's blog" text="stuart kent's blog" htmlUrl="" type="rss" xmlUrl="http://blogs.msdn.com/stuart_kent/rss.xml" />
+       <outline title="planet openArchitectureWare" text="planet openArchitectureWare" htmlUrl="" type="rss" xmlUrl="http://www.openarchitectureware.org/planet/rss20.xml" />
+       <outline title="voelterblog" text="voelterblog" htmlUrl="http://voelterblog.blogspot.com/" type="rss" xmlUrl="http://voelterblog.blogspot.com/atom.xml" />
+    </outline>
+  <outline text="IEEE" >
+       <outline title="IEEE Internet Computing" text="IEEE Internet Computing" htmlUrl="http://www.computer.org/internet" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_internet_computing" />
+       <outline title="IEEE Software" text="IEEE Software" htmlUrl="http://www.computer.org/software" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_software" />
+       <outline title="IEEE IT Professional" text="IEEE IT Professional" htmlUrl="http://www.computer.org/itpro" type="rss" xmlUrl="http://feeds.pheedo.com/it_professional" />
+       <outline title="IEEE Distributed Systems Online" text="IEEE Distributed Systems Online" htmlUrl="http://www.computer.org/dsodl" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_distributed_systems_online" />
+       <outline title="IEEE Computer" text="IEEE Computer" htmlUrl="http://www.computer.org/computer" type="rss" xmlUrl="http://feeds.pheedo.com/computer991" />
+       <outline title="IEEE Transactions on Computers" text="IEEE Transactions on Computers" htmlUrl="http://www.computer.org/tc" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_transactions_on_computers" />
+       <outline title="IEEE Transactions on Software Engineering" text="IEEE Transactions on Software Engineering" htmlUrl="http://www.computer.org/tse" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_transactions_on_software_engineering" />
+       <outline title="IEEE Spectrum Online - All" text="IEEE Spectrum Online - All" htmlUrl="http://spectrum.ieee.org/rss/priv" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_spectrum_online" />
+       <outline title="IEEE Computer Society Digital Library Magazines Released Today" text="IEEE Computer Society Digital Library Magazines Released Today" htmlUrl="http://www.computer.org/publications/dlib/" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_computer_society_digital_library_magazines_released_today" />
+       <outline title="IEEE Computer Society Digital Library Conference Proceedings Rel" text="IEEE Computer Society Digital Library Conference Proceedings Rel" htmlUrl="http://www.computer.org/publications/dlib/" type="rss" xmlUrl="http://feeds.pheedo.com/ieee_computer_society_digital_library_conference_proceedings_released_today" />
+    </outline>
+  <outline text="IBM developerWorks" >
+       <outline title="IBM developerWorks : SOA and Web services" text="IBM developerWorks : SOA and Web services" htmlUrl="http://www.ibm.com/developerworks/" type="rss" xmlUrl="http://www.ibm.com/developerworks/views/webservices/rss/libraryview.jsp" />
+       <outline title="IBM Technical Journals | IBM Systems Journal" text="IBM Technical Journals | IBM Systems Journal" htmlUrl="http://www.research.ibm.com/journal/sj/" type="rss" xmlUrl="http://www.research.ibm.com/journal/ibmsj.xml" />
+       <outline title="IBM Technical Journals | IBM Journal of Research and Development" text="IBM Technical Journals | IBM Journal of Research and Development" htmlUrl="http://www.research.ibm.com/journal/rd/" type="rss" xmlUrl="http://www.research.ibm.com/journal/ibmrd.xml" />
+    </outline>
+  <outline text="Business" >
+       <outline title="BusinessWeek.com -- Technology" text="BusinessWeek.com -- Technology" htmlUrl="http://www.businessweek.com/technology" type="rss" xmlUrl="http://rss.businessweek.com/bw_rss/technology" />
+       <outline title="Jason Stamper's Blog" text="Jason Stamper's Blog" htmlUrl="http://www.businessreviewonline.com/blog/" type="rss" xmlUrl="http://www.businessreviewonline.com/blog/index.xml" />
+       <outline title="Sunday, 7th March 2010" text="Sunday, 7th March 2010" htmlUrl="http://www.cbronline.com/" type="rss" xmlUrl="http://www.cbronline.com/rss/rss_features.asp" />
+    </outline>
+  <outline text="Technology" >
+       <outline title="InfoWorld Columns Feed" text="InfoWorld Columns Feed" htmlUrl="http://www.infoworld.com" type="rss" xmlUrl="http://feeds.infoworld.com/infoworld/rss/columnists" />
+       <outline title="Program Transformation Wiki" text="Program Transformation Wiki" htmlUrl="http://www.program-transformation.org" type="rss" xmlUrl="http://www.program-transformation.org/view/Transform/WebRss?skin=rss" />
+       <outline title="The OrbZone" text="The OrbZone" htmlUrl="http://www.orbzone.org" type="rss" xmlUrl="http://www.orbzone.org/?feed=rss2" />
+       <outline title="The OrbZone Comments" text="The OrbZone Comments" htmlUrl="http://www.orbzone.org" type="rss" xmlUrl="http://www.orbzone.org/?feed=comments-rss2" />
+       <outline title="DevConnections Blog" text="DevConnections Blog" htmlUrl="http://aspadvice.com/blogs/devconnections/default.aspx" type="rss" xmlUrl="http://aspadvice.com/blogs/devconnections/atom.aspx" />
+       <outline title="W3C News" text="W3C News" htmlUrl="http://www.w3.org/" type="rss" xmlUrl="http://www.w3.org/2000/08/w3c-synd/home.rss" />
+       <outline title="WUGNET - This Week's Computing Tip" text="WUGNET - This Week's Computing Tip" htmlUrl="http://www.wugnet.com/tips/default.asp" type="rss" xmlUrl="http://www.wugnet.com/xml/rss-tips.asp?rec=1" />
+       <outline title="Windows Tip of the Day" text="Windows Tip of the Day" htmlUrl="http://windowstipoftheday.blogspot.com/" type="rss" xmlUrl="http://windowstipoftheday.blogspot.com/atom.xml" />
+    </outline>
+  <outline text="The Server-Side" >
+       <outline title="Support Forums.com: " text="Support Forums.com: " htmlUrl="http://www.theserverside.com" type="rss" xmlUrl="http://www.theserverside.com/rss/theserverside-blogs-rss2.xml" />
+       <outline title="Support Forums.com: " text="Support Forums.com: " htmlUrl="http://www.theserverside.com" type="rss" xmlUrl="http://www.theserverside.com/rss/theserverside-performance-rss2.xml" />
+       <outline title="TheServerSide.com: " text="TheServerSide.com: " htmlUrl="http://www.theserverside.com" type="rss" xmlUrl="http://www.theserverside.com/rss/theserverside-events-rss2.xml" />
+    </outline>
+  <outline text="Vanderbilt" >
+       <outline title="Vanderbilt University News" text="Vanderbilt University News" htmlUrl="" type="rss" xmlUrl="http://www.vanderbilt.edu/news/releases/rss" />
+       <outline title="ITS News" text="ITS News" htmlUrl="" type="rss" xmlUrl="http://sitemason.vanderbilt.edu/newspub/cVGBK8/rss" />
+    </outline>
+  <outline text="Tech News" >
+       <outline title="Wired Top Stories" text="Wired Top Stories" htmlUrl="http://www.wired.com/rss/index.xml" type="rss" xmlUrl="http://www.wired.com/news/feeds/rss2/0,2610,,00.xml" />
+       <outline title="Linux.com :: Features" text="Linux.com :: Features" htmlUrl="http://www.linux.com/feature" type="rss" xmlUrl="http://www.linux.com/feature?theme=rss" />
+       <outline title="The Register" text="The Register" htmlUrl="http://www.theregister.co.uk/" type="rss" xmlUrl="http://www.theregister.co.uk/headlines.rss" />
+       <outline title="Infoworld News" text="Infoworld News" htmlUrl="" type="rss" xmlUrl="http://feeds.infoworld.com/infoworld/rss/news" />
+       <outline title="InfoWorld RSS Feed" text="InfoWorld RSS Feed" htmlUrl="http://www.infoworld.com" type="rss" xmlUrl="http://www.infoworld.com/rss/editor%27s_letter.xml" />
+       <outline title="InfoWorld Daily | Tom Sullivan" text="InfoWorld Daily | Tom Sullivan" htmlUrl="http://weblog.infoworld.com/daily/?source=RSS" type="rss" xmlUrl="http://feeds.infoworld.com/infoworld/daily/rss" />
+       <outline title="CNET News.com" text="CNET News.com" htmlUrl="" type="rss" xmlUrl="http://news.cnet.com/2547-1_3-0-20.xml" />
+    </outline>
+</body>
+</opml>
