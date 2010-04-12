@@ -1,0 +1,7 @@
+all: mobile_consumer
+
+mobile_consumer: mobile_consumer.cpp
+	g++ mobile_consumer.cpp -o mobile_consumer -Wall -I $(ACE_ROOT) -L $(ACE_ROOT)/lib -lACE
+
+clean:
+	rm -f mobile_consumer

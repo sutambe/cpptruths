@@ -1,0 +1,67 @@
+// $Id$
+
+This directory builds upon the earlier SOCK_Dgram example and enhances
+it using the ACE Reactor framework. The reactor features showcased in
+this example involve the handling of timers (scheduling and
+cancelling), and handling of input events (in this case these events
+are incoming network events).
+
+To run it, start the server. You will notice that every 5 seconds it
+times out and starts a new timer. Start a client in another
+window. Whenever the client sends data to the server and a timer is
+still active, that timer will be cancelled, and a new one will be
+scheduled after the server has handled the request.
+
+Files in this directory comprise:
+
+Reactor_Test.mwc:        The workspace for the Make Project Creator
+                        (MPC) tool.  It includes individual projects.
+
+server.mpc:             The MPC project file to create the server
+                        executable 
+client.mpc:             The MPC project file to create the client
+                        executable
+
+
+server.cpp:             The server code using ACE
+proto_handler.{cpp,h}   The event handler we have written to showcase
+                        the Reactor features.
+client.cpp:             The client code using ACE
+
+
+Note that you will first need to install ACE. Make sure you have set
+the environment variable ACE_ROOT.  To use MPC, you will also need to
+set the MPC_ROOT environment variable.  Moreover, you will need Perl
+installed on your system if you do not have one.
+
+First create the Visual studio solution and project files (if you are
+working on Windows) or the Makefile if you are working on Linux. To do
+so do the following:
+
+On Windows:
+
+%ACE_ROOT%\bin\mwc.pl -type vc8 DGram_Reactor_Timer_Test.mwc
+
+
+On Linux:
+
+$ACE_ROOT/bin/mwc.pl -type gnuace DGram_Reactor_Timer_Test.mwc
+
+
+Running the demo:
+
+In separate windows, run
+
+./server   (or .\server.exe if you are on Windows)
+
+Let it print the port number on which it is running. Then run in
+another window:
+
+./client   (or .\client.exe if you are on Windows)
+
+To see the timeouts occurring on server side, start only the server
+and see timeouts.
+
+
+
+

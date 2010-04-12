@@ -1,0 +1,1 @@
+char*s="char*s=%c%s%c;main(){char a[500];sprintf(a,s,34,s,34);write(1,a,strlen(a));}";main(){char a[500];sprintf(a,s,34,s,34);write(1,a,strlen(a));}

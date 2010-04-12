@@ -1,0 +1,4 @@
+workspace {
+    client.mpc
+    server.mpc
+}

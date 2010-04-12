@@ -1,0 +1,21 @@
+// $Id$
+// project name is optional.  It depends on ace library
+project (client): acelib {
+   exename = client
+
+   Source_Files {
+      client.cpp
+      FileTransferClient.cpp
+      RelDataTransferSender.cpp
+      SenderProtocolFactory.cpp
+      UnrelChannel.cpp
+   }
+
+   Header_Files {
+      FileTransferClient.h
+      RelDataTransferSender.h
+      SenderProtocolFactory.h
+      UnrelChannel.h
+   }
+}
+
