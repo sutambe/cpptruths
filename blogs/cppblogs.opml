@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="opml2html.xsl"?>
+<opml version="1.1">
+    <head>
+    <title>C++ blogs</title>
+    <dateCreated>Sun, 11 Apr 2010 22:00:00 CST</dateCreated>
+    </head>
+    <body>
+        <outline title="C++" text="C++">
+            <outline text="/* Rambling comments... */"
+                title="/* Rambling comments... */" type="rss"
+                xmlUrl="http://www.lenholgate.com/index.rdf" htmlUrl="http://www.lenholgate.com/"/>
+            <outline text="A Sense of Design" title="A Sense of Design"
+                type="rss"
+                xmlUrl="http://codesynthesis.com/~boris/blog/feed/" htmlUrl="http://codesynthesis.com/~boris/blog"/>
+            <outline text="About.com C / C++ / C#"
+                title="About.com C / C++ / C#" type="rss"
+                xmlUrl="http://z.about.com/6/g/cplus/b/rss2.xml" htmlUrl="http://cplus.about.com/"/>
+            <outline text="ACCU  :: News Articles"
+                title="ACCU  :: News Articles" type="rss"
+                xmlUrl="http://accu.org/index.php/articles?theme=rss" htmlUrl="http://accu.org/index.php/articles"/>
+            <outline text="Advanced C++ with Examples"
+                title="Advanced C++ with Examples" type="rss"
+                xmlUrl="http://advancedcppwithexamples.blogspot.com/feeds/posts/default?alt=rss" htmlUrl="http://advancedcppwithexamples.blogspot.com/"/>
+            <outline text="Articles published in The C++ Source"
+                title="Articles published in The C++ Source" type="rss"
+                xmlUrl="http://www.artima.com/cppsource/feeds/cppsource.rss" htmlUrl="http://www.artima.com/"/>
+            <outline text="Attractive Chaos" title="Attractive Chaos"
+                type="rss"
+                xmlUrl="http://attractivechaos.wordpress.com/feed/" htmlUrl="http://attractivechaos.wordpress.com"/>
+            <outline text="Blog Entries for Andrew Koenig"
+                title="Blog Entries for Andrew Koenig" type="rss"
+                xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=andrewk&amp;task=rss" htmlUrl="http://dobbscodetalk.com"/>
+            <outline text="Blog Entries for Walter Bright"
+                title="Blog Entries for Walter Bright" type="rss"
+                xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=WalterBright&amp;Itemid=29&amp;task=rss" htmlUrl="http://dobbscodetalk.com"/>
+            <outline text="C++ &amp;amp; Boost"
+                title="C++ &amp;amp; Boost" type="rss"
+                xmlUrl="http://cppboost.blogspot.com/feeds/posts/default" htmlUrl="http://cppboost.blogspot.com/"/>
+            <outline text="C++ - Stack Overflow"
+                title="C++ - Stack Overflow" type="rss"
+                xmlUrl="http://stackoverflow.com/feeds/tag/c++" htmlUrl="http://stackoverflow.com/questions/tagged/?tagnames=c%2b%2b&amp;sort=active"/>
+            <outline text="C++ Soup!" title="C++ Soup!" type="rss"
+                xmlUrl="http://feeds.feedburner.com/CppSoup" htmlUrl="http://cplusplus-soup.com"/>
+            <outline text="C++0x - Stack Overflow"
+                title="C++0x - Stack Overflow" type="rss"
+                xmlUrl="http://stackoverflow.com/feeds/tag/c%2B%2B0x" htmlUrl="http://stackoverflow.com/questions/tagged/?tagnames=c%2b%2b0x&amp;sort=active"/>
+            <outline text="C++Next" title="C++Next" type="rss"
+                xmlUrl="http://cpp-next.com/feed/" htmlUrl="http://cpp-next.com"/>
+            <outline text="CodeGuru.com" title="CodeGuru.com" type="rss"
+                xmlUrl="http://feeds.feedburner.com/codeguru/cpp" htmlUrl="http://www.codeguru.com/"/>
+            <outline text="cplusplus.co.il" title="cplusplus.co.il"
+                type="rss" xmlUrl="http://cplusplus.co.il/feed/" htmlUrl="http://cplusplus.co.il"/>
+            <outline text="cplusplus.mattters.com Google feed"
+                title="cplusplus.mattters.com Google feed" type="rss"
+                xmlUrl="http://www.google.com/reader/public/atom/webfeed/1638859373976348496" htmlUrl="http://cplusplus.mattters.com/"/>
+            <outline text="InformIT :: C++ Reference Guide"
+                title="InformIT :: C++ Reference Guide" type="rss"
+                xmlUrl="http://www.informit.com/guides/guide_rss.aspx?g=cplusplus" htmlUrl="http://www.informit.com"/>
+            <outline text="Just Software Solutions Blog"
+                title="Just Software Solutions Blog" type="rss"
+                xmlUrl="http://www.justsoftwaresolutions.co.uk/index.rss" htmlUrl="http://www.justsoftwaresolutions.co.uk/blog/"/>
+            <outline text="Learning C++" title="Learning C++" type="rss"
+                xmlUrl="http://learningcppisfun.blogspot.com/feeds/posts/default?alt=rss" htmlUrl="http://learningcppisfun.blogspot.com/"/>
+            <outline text="Matthew Wilson's Weblog"
+                title="Matthew Wilson's Weblog" type="rss"
+                xmlUrl="http://www.artima.com/weblogs/feeds/bloggers/bigboy.rss" htmlUrl="http://www.artima.com/weblogs/index.jsp?blogger=bigboy"/>
+            <outline text="Meditation, The Art of Exploitation"
+                title="Meditation, The Art of Exploitation" type="rss"
+                xmlUrl="http://meditation-art.blogspot.com/atom.xml" htmlUrl="http://meditation-art.blogspot.com/"/>
+            <outline text="Mike Stall's .NET Debugging Blog"
+                title="Mike Stall's .NET Debugging Blog" type="rss"
+                xmlUrl="http://blogs.msdn.com/jmstall/rss.xml" htmlUrl="http://blogs.msdn.com/jmstall/default.aspx"/>
+            <outline text="mr-edd.co.uk" title="mr-edd.co.uk" type="rss"
+                xmlUrl="http://www.mr-edd.co.uk/?feed=rss2" htmlUrl="http://www.mr-edd.co.uk"/>
+            <outline text="Northwest C++ Users Group"
+                title="Northwest C++ Users Group" type="rss"
+                xmlUrl="http://www.nwcpp.org/rss.xml" htmlUrl="http://www.nwcpp.org"/>
+            <outline text="OnSoftware (audio)"
+                title="OnSoftware (audio)" type="rss"
+                xmlUrl="http://www.podango.com/feeds/feed.php?pid=2243&amp;amid=1&amp;returnType=all/index.xml" htmlUrl="http://www.informit.com/podcasts/channel.aspx?c=dadf92ca-3bdc-484e-9cd8-cbfe0cfc0de6"/>
+            <outline text="Parallel Programming in Native Code"
+                title="Parallel Programming in Native Code" type="rss"
+                xmlUrl="http://blogs.msdn.com/nativeconcurrency/rss.xml" htmlUrl="http://blogs.msdn.com/nativeconcurrency/default.aspx"/>
+            <outline text="Reddit C++" title="Reddit C++" type="rss"
+                xmlUrl="http://www.reddit.com/r/cpp/.rss" htmlUrl="http://www.reddit.com/r/cpp/"/>
+            <outline text="SlashSlash" title="SlashSlash" type="rss"
+                xmlUrl="http://slashslash.info/rss.xml" htmlUrl="http://slashslash.info/"/>
+            <outline text="snelson.org.uk/john"
+                title="snelson.org.uk/john" type="rss"
+                xmlUrl="http://snelson.org.uk/john/atom.xml" htmlUrl="http://snelson.org.uk//john"/>
+            <outline text="Stan Lippman's BLog"
+                title="Stan Lippman's BLog" type="rss"
+                xmlUrl="http://blogs.msdn.com/slippman/rss.xml" htmlUrl="http://blogs.msdn.com/slippman/default.aspx"/>
+            <outline text="Sutter's Mill" title="Sutter's Mill"
+                type="rss"
+                xmlUrl="http://herbsutter.wordpress.com/feed/" htmlUrl="http://herbsutter.com"/>
+            <outline text="Systemfault's Weblog"
+                title="Systemfault's Weblog" type="rss"
+                xmlUrl="http://debugfailure.wordpress.com/feed/" htmlUrl="http://debugfailure.wordpress.com"/>
+            <outline text="The C++ and Boost Code Shop"
+                title="The C++ and Boost Code Shop" type="rss"
+                xmlUrl="http://shoddykid.blogspot.com/feeds/posts/default" htmlUrl="http://shoddykid.blogspot.com/"/>
+            <outline text="The C++ and Boost Code Shop"
+                title="The C++ and Boost Code Shop" type="rss"
+                xmlUrl="http://shoddykid.blogspot.com/feeds/posts/default?alt=rss" htmlUrl="http://shoddykid.blogspot.com/"/>
+            <outline text="The Fastware Project"
+                title="The Fastware Project" type="rss"
+                xmlUrl="http://fastwareproject.blogspot.com/feeds/posts/default?alt=rss" htmlUrl="http://fastwareproject.blogspot.com/"/>
+            <outline text="The lone C++ coder's blog"
+                title="The lone C++ coder's blog" type="rss"
+                xmlUrl="http://codeblog.bsdninjas.co.uk/index.php?/feeds/index.rss2" htmlUrl="http://codeblog.bsdninjas.co.uk/"/>
+            <outline text="The Software Patterns Blog"
+                title="The Software Patterns Blog" type="rss"
+                xmlUrl="http://pattern.ijop.org/?feed=rss2" htmlUrl="http://pattern.ijop.org"/>
+            <outline text="Thinking Asynchronously in C++"
+                title="Thinking Asynchronously in C++" type="rss"
+                xmlUrl="http://think-async.blogspot.com/feeds/posts/default?alt=rss" htmlUrl="http://blog.think-async.com/"/>
+            <outline text="Visual C++ Team Blog"
+                title="Visual C++ Team Blog" type="rss"
+                xmlUrl="http://blogs.msdn.com/vcblog/rss.xml" htmlUrl="http://blogs.msdn.com/vcblog/default.aspx"/>
+            <outline text="Visual C++ Tips" title="Visual C++ Tips"
+                type="rss" xmlUrl="http://weseetips.com/feed/" htmlUrl="http://weseetips.com"/>
+            <outline text="  Bartosz Milewski's Programming Cafe"
+                title="  Bartosz Milewski's Programming Cafe" type="rss"
+                xmlUrl="http://bartoszmilewski.wordpress.com/feed/" htmlUrl="http://bartoszmilewski.wordpress.com"/>
+            <outline
+                text="FeedBurner - &quot;More C++ Idioms&quot; - Wikibook Updates"
+                title="FeedBurner - &quot;More C++ Idioms&quot; - Wikibook Updates"
+                type="rss"
+                xmlUrl="http://feeds.feedburner.com/MoreCppIdiomsWikibook" htmlUrl="http://en.wikibooks.org/wiki/Special:RecentChangesLinked"/>
+            <outline text="FeedBurner - C++ Truths"
+                title="FeedBurner - C++ Truths" type="rss"
+                xmlUrl="http://feeds.feedburner.com/CppTruths" htmlUrl="http://cpptruths.blogspot.com/"/>
+        </outline>
+    </body>
+</opml>
