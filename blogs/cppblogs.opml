@@ -30,10 +30,8 @@
                 xmlUrl="http://attractivechaos.wordpress.com/feed/" htmlUrl="http://attractivechaos.wordpress.com"/>
             <outline text="Blog Entries for Andrew Koenig"
                 title="Blog Entries for Andrew Koenig" type="rss"
-                xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=andrewk&amp;task=rss" htmlUrl="http://dobbscodetalk.com"/>
-            <outline text="Blog Entries for Walter Bright"
-                title="Blog Entries for Walter Bright" type="rss"
-                xmlUrl="http://dobbscodetalk.com/index.php?option=com_myblog&amp;blogger=WalterBright&amp;Itemid=29&amp;task=rss" htmlUrl="http://dobbscodetalk.com"/>
+                xmlUrl="http://www.drdobbs.com/blog/main/movabletype/rss_andrewkoenig.xml"
+                htmlUrl="http://www.drdobbs.com/blog/bioPages/author/AndrewKoenig/index.jhtml"/>
             <outline text="C++ &amp;Boost"
                 title="C++ &amp;Boost" type="rss"
                 xmlUrl="http://cppboost.blogspot.com/feeds/posts/default" htmlUrl="http://cppboost.blogspot.com/"/>
