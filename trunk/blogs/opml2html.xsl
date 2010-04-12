@@ -4,7 +4,7 @@
   <xsl:template match="opml/head" >
     <head><title>Sumant's <xsl:value-of select="title"/>
     </title></head>
-     <h2><font color="red">My <xsl:value-of select="title"/></font></h2> 
+     <h2><font color="red"><xsl:value-of select="title"/></font></h2> 
      Date created: <xsl:value-of select="dateCreated"/>
   </xsl:template>
 
@@ -25,7 +25,7 @@
           <a href="{$url}" >
             <xsl:value-of select="@text" />
           </a>
-          (<a href="{$xml}"><img border="0" src="../images/xml_small.jpg" alt="xml" /></a>)
+          (<a href="{$xml}"><img border="0" src="xml_small.jpg" alt="xml" /></a>)
         </li>
       </xsl:when>
       <xsl:otherwise>
