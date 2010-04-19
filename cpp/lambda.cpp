@@ -14,26 +14,28 @@ struct function_traits<R (C::*)()>  {
   typedef R result_type;
 };
 
-template <typename R>
-struct function_traits<R (*)()> {
-  typedef R result_type;
-};
-
-void foo(int (*v)(void))
+void foo(void (*v)(void))
 {
-  std::cout << "int (*v) void)\n";
+  std::cout << "void (*v) (void)\n";
 }
 
+template <class R, class T>
+void foo(R (T::*)(void))
+{
+  std::cout << "R (T::*) void)\n";
+}
+/*
 template <class T>
-void foo(int (T::*v)(void))
+void foo(T)
 {
-  std::cout << "int (T::*v) void)\n";
+  std::cout << "T\n";
 }
-
+*/
 int main(void) {
-  auto lambda = [] ()mutable { return rand(); };
-  //auto lambda = [&]{};
-  //auto lambda = [&]()mutable{};
+  int counter = 0;
+  auto lambda = []{};
+  //auto lambda = [&]() mutable {}; // converts to void (*v)()
+  //auto lambda = [&]()mutable{ ++counter; }; // Can't convert to void (*v)()
   //auto lambda = [=]{};
   //auto lambda = [=]()mutable{};
   function_traits<decltype(lambda)>::result_type *r;
