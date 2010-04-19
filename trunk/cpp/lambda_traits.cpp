@@ -64,7 +64,7 @@ struct function_traits<R (C::*)(Arg1, Arg2) const>
   typedef Arg1 first_argument_type;
   typedef Arg2 second_argument_type;
 };
-
+/*
 template <typename R>
 struct function_traits<R (*)()> 
 {
@@ -85,7 +85,7 @@ struct function_traits<R (*)(Arg1, Arg2)>
   typedef Arg1 first_argument_type;
   typedef Arg2 second_argument_type;
 };
-/*
+
 template <typename R>
 struct function_traits<R ()> 
 {
@@ -204,8 +204,8 @@ void test_function_traits()
 int main(void)
 {
   test_function_traits();
-  foo(f);
-  //foo(X());
+  //foo(f);
+  foo(X());
   bar([](float f, int l){ return f+l; });
   auto test_lambda = [](float f, int l) { return f+l;}; 
   function_traits<decltype(test_lambda)>::result_type rt;
@@ -221,7 +221,8 @@ int main(void)
                //std::bind1st(std::ptr_fun(less), 5)); 
   std::cout << std::endl;
 
-  // auto bound = std::bind1st(std::bind([] (int x, int y) { return x < y; }, _1, 5), 10.5); // Does not compile.
+  //auto bound = std::bind([] (int x, int y) { return x < y; }, _1, 5); 
+  auto bound = std::less<int>bind1st([] (int x, int y) { return x < y; }, 10.5); // Does not compile.
   // auto bound = std::bind1st(BF(), 10.5); // fails at run-time because BF is empty.
   // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5);
   AdaptAsUnary([](double d){ return d; });
@@ -236,6 +237,7 @@ int main(void)
   boost::mpl::for_each<Paras>(print_type_functor());
 
   std::ptr_fun(atoi);
+  //std::ptr_fun<int (*)(int)>([](int x){return x;});
 
   X x;
   float (X::*fptr)(float) = &X::operator();
