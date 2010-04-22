@@ -7,9 +7,8 @@ class X
 {
     char * str;
   public:
-    X() 
+    X() : str(0)
     {
-      str = 0;
       std::cout << "X::X()\n";
     }
     X(const char * p) 
