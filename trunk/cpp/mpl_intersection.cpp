@@ -86,6 +86,7 @@ struct contains <vector<>, What>
   enum { value = 0 };
 };
 
+
 /*
 struct base_one { enum { value = 1 }; };
 struct derived_zero : base_one { enum { value = 0 }; };
