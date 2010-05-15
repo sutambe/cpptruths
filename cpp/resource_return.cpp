@@ -6,8 +6,8 @@ struct X
   void foo() {}
 };
 
-//typedef std::auto_ptr<X> RETURN;
-typedef X * RETURN;
+typedef std::auto_ptr<X> RETURN;
+//typedef X * RETURN;
 //#define RETURN X*
 
 RETURN Xfactory() // Resource ownership explicitely transferred to the caller.
