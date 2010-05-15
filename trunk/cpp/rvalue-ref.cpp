@@ -81,8 +81,20 @@ X xmaker()
   return x;
 }
 
+void f(const std::string &)
+{
+  std::cout << "f(const &)\n"; 
+}
+
+void f(std::string &&)
+{
+  std::cout << "f(&&)\n"; 
+}
+
 int main (void)
 {
+  const char * str = "Test";
+  f(str);
 /* 
   X x("Sumant");
   X y("Tambe");
@@ -91,7 +103,7 @@ int main (void)
   std::cout << "x = " << x << std::endl;
   std::cout << "y = " << y << std::endl;
 */
-  
+ /* 
   //X v("Vanderbilt");
   std::vector<X> v1;
   //v1.push_back(v);
@@ -108,5 +120,6 @@ int main (void)
   v1 = std::move(v2);
 
   std::cout << "********************** Call stack unwinds below ************************\n";
+*/
 }
 
