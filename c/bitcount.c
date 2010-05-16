@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
 Fast Bit Counting Routines
@@ -7,14 +8,15 @@ http://infolab.stanford.edu/~manku/bitcount/bitcount.html
 
 To know whether a number is a power of 2 use !(n & (n-1)) 
 */
-int *(*fp())(){}
-int BitCount(int n)
+
+int BitCount(unsigned int n)
 {
   int count;
   count = n-((n>>1)&033333333333)-((n>>2)& 011111111111);
   return ((count+(count>>3))&030707070707)%63;
 }
-int lookup_bitcount (int num)
+
+int lookup_bitcount (unsigned int num)
 {
  static const unsigned char LookupTable[] = 
  { 
@@ -70,15 +72,22 @@ int nifty_parallel_count (unsigned int n)
    return n % 255 ;
 }
 
+int regular_bit_counter(unsigned int n) 
+{
+  int count;
+  for(count = 0; n; n &= (n-1), ++count);
+  return count;
+}
+
 int main(int argc, char *argv [])
 {
   int n = atoi(argv[1]);
-  int p = n;
   int count;
+
   printf ("Is n a power of two: %d\n",!( n & (n-1)));
-  for(count=0;p;p&=p-1,count++);
+  count = regular_bit_counter(n);
   
-  printf ("%d, BitCount = %d, lookup_bitcount = %d," 
+  printf ("RegularCount = %d, BitCount = %d, lookup_bitcount = %d, " 
           "parallel_count = %d, nifty_p_count = %d\n", 
            count, BitCount (n), lookup_bitcount (n),
            parallel_count (n), nifty_parallel_count (n));
