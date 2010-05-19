@@ -1,0 +1,12 @@
+setenv LD_TOOLFILE "`pwd`/tools.input"
+setenv LD_REDIRECT "file:`pwd`/redirect.input"
+setenv LD_WRAP_LIB "libwrap.so.0.0:libwrap2.so.0.0:libstringtable.so"
+#setenv LD_WRAP_LIB "libwrappers3.so"
+#setenv LD_WRAP_LIB "libstringtable.so"
+#setenv LD_WRAP_TCL "wrap.tcl"
+#setenv LD_NOVERSIONS "TRUE"
+
+#setenv LD_LIBRARY_PATH "`pwd`:${LD_LIBRARY_PATH}:/lib:/usr/lib:/usr/X11R6/lib"
+#setenv LD_LIBRARY_PATH "`pwd`:`pwd`/../sw-10/glibc-2.3.2/build-glibc-2.3.2:`pwd`/../sw-10/glibc-2.3.2/build-glibc-2.3.2/linuxthreads:`pwd`/../sw-10/glibc-2.3.2/build-glibc-2.3.2/dlfcn:`pwd`/../sw-10/glibc-2.3.2/build-glibc-2.3.2/math:`pwd`/../sw-10/glibc-2.3.2/build-glibc-2.3.2/elf"
+setenv LD_LIBRARY_PATH "`pwd`:/lib:/usr/lib:/usr/X11R6/lib"
+setenv LD_PRELOAD "`pwd`/libeventdispatch.so"
