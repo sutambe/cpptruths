@@ -1,0 +1,51 @@
+# Format:
+# Put keyword "LINK".
+# On next line put <orig_funcname> <orig_libname> <new_funcname> <new_libname>
+# new_libname must be present and must have new_funcname symbol in it.
+# new_libname can't be "main" Try "unknown"
+# Put keyword "END_LINK" on new line.
+#
+# Put keyword "TABLE".
+# On next line put <tablename> <jumptable_funcname> <table_libname>
+# On next line put <orig_funcname> <orig_libname>
+# table_libname must be present and must have jumptable_funcname symbol in it.
+# Put keyword "END_TABLE" on new line.
+
+
+LINK
+
+# These are commented examples: 
+# The wrapper libraries may or may not exist in the distribution
+
+#putchar main putchar libc.so.6
+#strrchr libwrap2.so.0.0 mystrrchr libwrap.so.0.0
+#strrchr main mystrrchr libwrap.so.0.0
+#sleep main mysleep libwrap2.so.0.0
+#fprintf * wrap_fprintf libwrap.so.0.0
+#printf * wrap_printf libwrap.so.0.0
+#malloc * wrap_malloc libwrap.so.0.0
+#printf main wrap_printf libwrappers3.so
+#write * wrap_write libwrap.so.0.0
+#fputs * wrap_fputs libwrap.so.0.0
+#strrchr libc.so.6 mystrrchr libwrap2.so.0.0
+#strcmp libXcursor.so.1 mystrcmp libwrap2.so.0.0
+#strcmp main mystrcmp libwrap2.so.0.0
+
+#putchar main myputchar libwrap.so.0.0
+#malloc * wrap_malloc libwrappers3.so
+#free main wrap_free libwrap.so.0.0
+#malloc main malloc /lib/libc.so.6
+#free main free /lib/libc.so.6
+
+END_LINK
+
+TABLE
+
+stringtable _jt_jumptable libstringtable.so
+
+#usehello main
+#strrchr libc.so.6
+strrchr main
+putchar main
+
+END_TABLE
