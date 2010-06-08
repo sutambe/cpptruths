@@ -1,8 +1,11 @@
 #include <iostream>
 #include <map>
+#include <set>
 #include <algorithm>
 #include <iterator>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
+#include <boost/foreach.hpp>
 
 template <class Pair>
 struct select2nd : std::unary_function<Pair, typename Pair::second_type>
@@ -48,6 +51,13 @@ bool foo(mymap::value_type const &)
   return 1;
 }
 
+typedef std::pair<int, int> IntPair;
+std::ostream & operator << (std::ostream & o, const IntPair & p)
+{
+  o << "[" << p.first << ", " << p.second << "]";
+  return o;
+}
+
 int main(void) 
 {
   mymap m;
@@ -74,5 +84,16 @@ int main(void)
                  cm.end(), 
                  std::ostream_iterator<unsigned>(std::cout," "),
                  select2nd<mymap::value_type>());
+
+  typedef boost::function<bool (const IntPair &, const IntPair &)> Comparator;
+  Comparator c = boost::bind(&IntPair::second, _1) < boost::bind(&IntPair::second, _2);
+  std::set<IntPair, Comparator> s(c);
+  s.insert(IntPair(5,6));
+  s.insert(IntPair(3,4));
+  s.insert(IntPair(1,2));
+  BOOST_FOREACH(IntPair const & p, s)
+  {
+    std::cout << p;
+  }
 }
 
