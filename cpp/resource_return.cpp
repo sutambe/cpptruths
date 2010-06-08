@@ -16,7 +16,9 @@ RETURN Xfactory() // Resource ownership explicitely transferred to the caller.
 }
 int main (void)
 {
-    Xfactory()->foo(); // Dynamically allocated instance of X does not leak here
-    return 0;
+  RETURN r;
+  r = Xfactory();
+  r->foo(); // Dynamically allocated instance of X does not leak here
+  return 0;
 }
 
