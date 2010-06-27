@@ -46,7 +46,7 @@ typedef struct PktParse_tag
   DataPkt packet;  
 } PktParse;
 
-typedef struct SyncQ_teg {
+typedef struct SyncQ_tag {
   std::deque <DataPkt> queue;
   pthread_mutex_t lock;
   pthread_cond_t empty;
