@@ -81,12 +81,14 @@ X xmaker()
   return x;
 }
 
-void f(const std::string &)
+//void f(const std::string &)
+void f(const X &)
 {
   std::cout << "f(const &)\n"; 
 }
 
-void f(std::string &&)
+//void f(std::string &&)
+void f(X &&)
 {
   std::cout << "f(&&)\n"; 
 }
@@ -94,7 +96,7 @@ void f(std::string &&)
 int main (void)
 {
   const char * str = "Test";
-  f(str);
+  f(str); // g++ 4.6 calls f(&&), VS2010 calls f(const &). Why?
 /* 
   X x("Sumant");
   X y("Tambe");
