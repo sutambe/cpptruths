@@ -10,7 +10,7 @@ struct K17
 };
 
 template<int A, typename B>
-struct K17<13,A,B> 
+struct K17<17,A,B> 
 { 
   enum { value = 1 };
 };
