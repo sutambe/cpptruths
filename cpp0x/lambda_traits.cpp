@@ -2,16 +2,21 @@
 
 #include <iostream>
 #include <vector>
-#include <functional>
+#include <functional> // for std::binder1st
 #include <iterator>
 #include <algorithm>
 #include <cstdlib>
+
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/front.hpp>
-#include <boost/function.hpp>
+#include <boost/function.hpp>   // for boost::function
+#include <boost/functional.hpp> // for boost::binder1st
 #include <boost/function_types/result_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 
+//#include <boost/bind.hpp>
+//#include <boost/bind/placeholders.hpp>
+//using namespace boost::placeholders;
 using namespace std::placeholders;
 
 struct X
@@ -165,8 +170,11 @@ struct print_type_functor
 
 int f(int x) { return x + x;  }
 bool less(int x, int y) { return x < y;  }
-struct zoo {
+struct zoo : std::binary_function<int,int,int> {
   int operator ()(int x, int y) { return x+y; }
+};
+struct zoo_const : std::binary_function<int,int,int> {
+  int operator ()(int x, int y) const { return x+y; }
 };
 
 
@@ -209,7 +217,11 @@ void test_function_traits()
   //function_traits<F1>::argument_type arg1;
 }
 
+#ifdef WIN32
 int _tmain(int argc, _TCHAR* argv[])
+#else
+int main(void)
+#endif
 {
   test_function_traits();
   //foo(f);
@@ -231,15 +243,25 @@ int _tmain(int argc, _TCHAR* argv[])
                //std::bind1st(std::ptr_fun(less), 5)); 
 #endif
   std::cout << std::endl;
+  
+  // non-mutable
+  // auto bound = std::bind([] (int x, int y) { return x + y; }, _1, 5); // -VS2010,
+  // auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // -VS2010, -g++4.5
+  // auto bound = std::bind1st(BF(), 10.5); // +VS2010. Fails at run-time because BF is empty.
+  // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5); // +VS2010
+   zoo_const z; auto bound = boost::bind1st(z, 200); // +VS2010
+  // zoo_const z; auto bound = std::bind1st(z, 200); // +VS2010
+  // auto bound = std::bind1st(AdaptAsBinary([](double d, int i) { return d+i; }), 10.5); // +VS2010
 
-  // auto bound = std::bind([] (int x, int y) { return x < y; }, _1, 5); 
-  // auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // Does not compile. VS2010, g++4.5
-  // auto bound = std::bind1st(BF(), 10.5); // fails at run-time because BF is empty.
-  // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5);
-  
-  //zoo z; auto bound = std::bind1st(AdaptAsBinary(z), 200);
-  double foo; auto bound = std::bind1st(AdaptAsBinary([foo](double d, int i) mutable { return (foo=d+i); }), 10.5);
-  
+  // mutable
+  // auto bound = std::bind([vint] (int x, int y) mutable { return vint[0]=(x + y); }, _1, 5); // -VS2010
+  // auto bound = std::less<int>(std::bind1st([vint] (int x, int y) mutable { return vint[0]=(x + y); }, 10.5)); // -VS2010, -g++4.5
+  /* auto bound = std::bind1st(std::function<double (double, int)> 
+     ([vint](double d, int i) mutable { return vint[0]=d+i; }), 10.5); // +VS2010 */
+  // zoo z; auto bound = boost::bind1st(z, 200); -VS2010
+  // zoo z; auto bound = std::bind1st(z, 200);  -VS2010
+  // auto bound = std::bind1st(AdaptAsBinary([vint](double d, int i) mutable { return (vint[0]=d+i); }), 10.5); -VS2010
+
   std::cout << "bound = " << bound(5) << std::endl;
 
   AdaptAsUnary([](double d){ return d; });
