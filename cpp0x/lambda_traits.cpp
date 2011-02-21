@@ -19,6 +19,7 @@ struct X
 };
 
 template <typename T>
+/* Taking address will not work for functors that have templatized function call operator. */
 struct function_traits : function_traits<decltype(&T::operator())>
 {
 };
@@ -222,7 +223,7 @@ int main(void)
   std::cout << std::endl;
 
   //auto bound = std::bind([] (int x, int y) { return x < y; }, _1, 5); 
-  auto bound = std::less<int>bind1st([] (int x, int y) { return x < y; }, 10.5); // Does not compile.
+  auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // Does not compile.
   // auto bound = std::bind1st(BF(), 10.5); // fails at run-time because BF is empty.
   // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5);
   AdaptAsUnary([](double d){ return d; });
