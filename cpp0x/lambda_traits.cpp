@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include <iostream>
 #include <vector>
 #include <functional>
@@ -65,6 +67,7 @@ struct function_traits<R (C::*)(Arg1, Arg2) const>
   typedef Arg1 first_argument_type;
   typedef Arg2 second_argument_type;
 };
+
 /*
 template <typename R>
 struct function_traits<R (*)()> 
@@ -162,18 +165,22 @@ struct print_type_functor
 
 int f(int x) { return x + x;  }
 bool less(int x, int y) { return x < y;  }
+struct zoo {
+  int operator ()(int x, int y) { return x+y; }
+};
+
 
 template <typename T>
 struct AdaptedAsUnary : T, 
   std::unary_function<typename function_traits<T>::result_type,
                       typename function_traits<T>::argument_type>
 {
-  AdaptedAsUnary(T t) : T(t) {}
+  AdaptedAsUnary(T &t) : T(t) {}
 };
 
 template <typename T>
 AdaptedAsUnary<T>
-AdaptAsUnary(T t)
+AdaptAsUnary(T &t)
 {
   return AdaptedAsUnary<T>(t);
 }
@@ -184,13 +191,13 @@ struct AdaptedAsBinary : T,
                        typename function_traits<T>::first_argument_type,
                        typename function_traits<T>::second_argument_type>
 {
-  AdaptedAsBinary(T t) : T(t), x(t) {}
+  AdaptedAsBinary(T &t) : T(t), x(t) { }
   T x; // copy constructed lambda.
 };
 
 template <typename T>
 AdaptedAsBinary<T>
-AdaptAsBinary(T t)
+AdaptAsBinary(T &t)
 {
   return AdaptedAsBinary<T>(t);
 }
@@ -202,7 +209,7 @@ void test_function_traits()
   //function_traits<F1>::argument_type arg1;
 }
 
-int main(void)
+int _tmain(int argc, _TCHAR* argv[])
 {
   test_function_traits();
   //foo(f);
@@ -215,22 +222,28 @@ int main(void)
 
   std::vector<int> vint;
   std::generate_n(std::back_inserter(vint), 10, []() { return rand() % 10; } );
+#ifndef WIN32
   std::copy_if(vint.begin(), vint.end(), 
                std::ostream_iterator<int>(std::cout, " "), 
                std::bind([] (int x, int y) { return x < y; }, _1, 5)); 
+               //std::bind([] (int x, int y) { return x < 5; })); 
                //std::bind1st(std::less<int>(), 5)); 
                //std::bind1st(std::ptr_fun(less), 5)); 
+#endif
   std::cout << std::endl;
 
-  //auto bound = std::bind([] (int x, int y) { return x < y; }, _1, 5); 
-  auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // Does not compile.
+  // auto bound = std::bind([] (int x, int y) { return x < y; }, _1, 5); 
+  // auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // Does not compile. VS2010, g++4.5
   // auto bound = std::bind1st(BF(), 10.5); // fails at run-time because BF is empty.
   // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5);
+  
+  //zoo z; auto bound = std::bind1st(AdaptAsBinary(z), 200);
+  double foo; auto bound = std::bind1st(AdaptAsBinary([foo](double d, int i) mutable { return (foo=d+i); }), 10.5);
+  
+  std::cout << "bound = " << bound(5) << std::endl;
+
   AdaptAsUnary([](double d){ return d; });
   
-  std::bind1st(AdaptAsBinary([](double d, int i){ return d+i; }), 10.5);
-  //std::cout << "bound = " << bound(5) << std::endl;
-
   typedef bool LessFuncType(int,int);
   boost::function_types::result_type<LessFuncType>::type flag(false);
   typedef boost::function_types::parameter_types<LessFuncType>::type Paras;
