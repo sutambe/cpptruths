@@ -183,12 +183,12 @@ struct AdaptedAsUnary : T,
   std::unary_function<typename function_traits<T>::result_type,
                       typename function_traits<T>::argument_type>
 {
-  AdaptedAsUnary(T &t) : T(t) {}
+  AdaptedAsUnary(T t) : T(t) {}
 };
 
 template <typename T>
 AdaptedAsUnary<T>
-AdaptAsUnary(T &t)
+AdaptAsUnary(T t)
 {
   return AdaptedAsUnary<T>(t);
 }
@@ -199,13 +199,13 @@ struct AdaptedAsBinary : T,
                        typename function_traits<T>::first_argument_type,
                        typename function_traits<T>::second_argument_type>
 {
-  AdaptedAsBinary(T &t) : T(t), x(t) { }
+  AdaptedAsBinary(T t) : T(t), x(t) { }
   T x; // copy constructed lambda.
 };
 
 template <typename T>
 AdaptedAsBinary<T>
-AdaptAsBinary(T &t)
+AdaptAsBinary(T t)
 {
   return AdaptedAsBinary<T>(t);
 }
