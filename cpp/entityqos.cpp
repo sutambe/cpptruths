@@ -1,5 +1,23 @@
 #include <iostream>
-#include <boost/utility/enable_if.hpp>
+
+namespace boost {
+
+template <bool Condition, typename ResultType>
+struct enable_if_c
+{ };
+
+template <typename ResultType>
+struct enable_if_c <true, ResultType>
+{
+  typedef ResultType type;
+};
+
+template <typename Condition, typename ResultType>
+struct enable_if : public enable_if_c <Condition::value, ResultType>
+{};
+
+} // boost
+
 
 namespace dds { namespace core {
 
