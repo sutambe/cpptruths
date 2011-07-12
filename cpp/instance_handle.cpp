@@ -50,7 +50,8 @@ public:
     const D& delegate() const { return d_; }
     D& delegate() { return d_;}
 
-    // operator D() { return d_; }
+    operator const D &() const { return d_; }
+    operator D &() { return d_; }
 
 protected:
     D d_;
@@ -148,5 +149,8 @@ int main(void)
   
   if(ih_foo)
     std::cout << "if(ih_foo)\n";
+
+  Foo f;
+  f = ih_foo;
 }
 
