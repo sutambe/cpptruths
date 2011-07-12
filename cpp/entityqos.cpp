@@ -131,7 +131,9 @@ public:
      * @return
      */
     template <typename POLICY>
-    const POLICY& policy() const {
+    typename boost::enable_if<HasPolicy<DELEGATE, POLICY>,
+                              const POLICY &>::type
+    policy() const {
         return this->delegate().template policy<POLICY>();
     }
 
@@ -142,7 +144,9 @@ public:
      * @return
      */
     template <typename POLICY>
-    POLICY& policy() {
+    typename boost::enable_if<HasPolicy<DELEGATE, POLICY>,
+                              POLICY &>::type
+    policy() {
         return this->delegate().template policy<POLICY>();
     }
 
@@ -247,9 +251,12 @@ int main(void)
   dds::pub::qos::DataWriterQos dwqos;
   dds::core::policy::Deadline d;
   dds::core::policy::Presentation p; (void) p;
-  //dwqos.policy(p);
-  dwqos >> p;
-  //dwqos << p;
+  //dwqos.policy(p); // Compile-time error.
+  //dwqos << p;      // Compile-time error.
+  
+  //dwqos >> p;  // no compile-time error.
+  p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
+  
   dwqos >> d;
   d = dwqos.policy<dds::core::policy::Deadline>();
 }
