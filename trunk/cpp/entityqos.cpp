@@ -67,7 +67,8 @@ public:
     const D& delegate() const { return d_; }
     D& delegate() { return d_;}
 
-    // operator D() { return d_; }
+    operator const D &() const { return d_; }
+    operator D &() { return d_; }
 
 protected:
     D d_;
@@ -254,8 +255,8 @@ int main(void)
   //dwqos.policy(p); // Compile-time error.
   //dwqos << p;      // Compile-time error.
   
-  //dwqos >> p;  // no compile-time error.
-  p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
+  dwqos >> p;  // no compile-time error.
+  //p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
   
   dwqos >> d;
   d = dwqos.policy<dds::core::policy::Deadline>();
