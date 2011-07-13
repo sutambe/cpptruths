@@ -1,5 +1,6 @@
 #include <iostream>
 
+#ifdef WITH_ENABLE_IF
 namespace boost {
 
 template <bool Condition, typename ResultType>
@@ -17,7 +18,7 @@ struct enable_if : public enable_if_c <Condition::value, ResultType>
 {};
 
 } // boost
-
+#endif // WITH_ENABLE_IF
 
 namespace dds { namespace core {
 
@@ -132,8 +133,12 @@ public:
      * @return
      */
     template <typename POLICY>
+#ifdef WITH_ENABLE_IF
     typename boost::enable_if<HasPolicy<DELEGATE, POLICY>,
                               const POLICY &>::type
+#else
+    const POLICY &
+#endif
     policy() const {
         return this->delegate().template policy<POLICY>();
     }
@@ -145,8 +150,12 @@ public:
      * @return
      */
     template <typename POLICY>
+#ifdef WITH_ENABLE_IF
     typename boost::enable_if<HasPolicy<DELEGATE, POLICY>,
                               POLICY &>::type
+#else
+    POLICY &
+#endif
     policy() {
         return this->delegate().template policy<POLICY>();
     }
@@ -158,8 +167,12 @@ public:
     }
 
     template <typename POLICY>
+#ifdef WITH_ENABLE_IF
     typename boost::enable_if<HasPolicy<DELEGATE, POLICY>,
                               const EntityQos &>::type
+#else
+    const EntityQos &
+#endif
     operator >> (POLICY& p) const {
         p = this->delegate().template policy<POLICY>();
         return *this;
@@ -180,7 +193,10 @@ namespace dds { namespace core { namespace policy {
 struct Deadline      {};
 struct LatencyBudget {};
 struct Reliability   {};
-struct Presentation  {};
+struct Presentation  
+{ 
+  void set_pres(int i) { }; 
+};
 
 } } } // dds/core/policy
 
@@ -255,8 +271,9 @@ int main(void)
   //dwqos.policy(p); // Compile-time error.
   //dwqos << p;      // Compile-time error.
   
-  dwqos >> p;  // no compile-time error.
-  //p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
+  //dwqos >> p;  // no compile-time error.
+  p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
+  dwqos.policy<dds::core::policy::Presentation>().set_pres(10); // no compile-time error.
   
   dwqos >> d;
   d = dwqos.policy<dds::core::policy::Deadline>();
