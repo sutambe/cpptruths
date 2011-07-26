@@ -245,15 +245,17 @@ int main(void)
   std::cout << std::endl;
   
   // non-mutable
+   auto bound = [] (int x) { return x*x; };
   // auto bound = std::bind([] (int x, int y) { return x + y; }, _1, 5); // -VS2010, +g++4.5
   // auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // -VS2010, -g++45
   // auto bound = std::bind1st(BF(), 10.5); // +VS2010. +g++45 Fails at run-time because BF is empty.
   // auto bound = std::bind1st(std::function<double (double, int)>([](double d, int i){ return d+i; }), 10.5); // +VS2010 +g++45
   // zoo_const z; auto bound = boost::bind1st(z, 200); // +VS2010 +g++45
-  zoo_const z; auto bound = std::bind1st(z, 200); // +VS2010 +g++45
+  // zoo_const z; auto bound = std::bind1st(z, 200); // +VS2010 +g++45
   // auto bound = std::bind1st(AdaptAsBinary([](double d, int i) { return d+i; }), 10.5); // +VS2010 +g++45
 
   // mutable
+  // auto bound = [vint] (int x) mutable { return vint[0]=(x*x); };
   // auto bound = std::bind([vint] (int x, int y) mutable { return vint[0]=(x + y); }, _1, 5); // -VS2010 +g++45
   // auto bound = std::less<int>(std::bind1st([vint] (int x, int y) mutable { return vint[0]=(x + y); }, 10.5)); // -VS2010, -g++4.5
   /* auto bound = std::bind1st(std::function<double (double, int)> 
@@ -263,6 +265,10 @@ int main(void)
   // auto bound = std::bind1st(AdaptAsBinary([vint](double d, int i) mutable { return (vint[0]=d+i); }), 10.5); // -VS2010 -g++45
 
   std::cout << "bound = " << bound(5) << std::endl;
+
+  boost::unary_traits<decltype(bound)>::argument_type arg;
+  boost::unary_traits<decltype(bound)>::result_type result;
+
 
   AdaptAsUnary([](double d){ return d; });
   
