@@ -18,11 +18,6 @@
 
 #include <cstdio> // remove
 #include <boost/config.hpp>
-#if defined(BOOST_NO_STDC_NAMESPACE)
-namespace std{ 
-    using ::remove;
-}
-#endif
 
 #include <boost/archive/tmpdir.hpp>
 #include <boost/archive/xml_iarchive.hpp>
@@ -390,7 +385,7 @@ int main(void)
     std::cout << new_schedule;
     // should be the same as the old one. (except for the pointer values)
 
-    std::remove(filename.c_str());
+    //::remove(filename.c_str());
 
     delete bs0;
     delete bs1;
