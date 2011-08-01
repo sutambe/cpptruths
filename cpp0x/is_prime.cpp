@@ -93,12 +93,16 @@ static bool IsPrime(size_t number)
 
 int main(void)
 {
+  /*
  PRIME(NUMBER);
 #ifdef CONSTEXPR
  static_assert(is_prime_func(NUMBER), "...");
 #else
  static_assert(is_prime<NUMBER>::value, "...");
 #endif
+*/
+ //printf("IsPrime(%d) = %d\n", NUMBER, IsPrime(NUMBER));
+ printf("is_prime_func(%d) = %d\n", NUMBER, is_prime_func(NUMBER));
 
  return 0;
 }
