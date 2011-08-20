@@ -33,7 +33,7 @@ class array_types
     : builtin{5, 10}, init_list(il), array{{5, 10}}, vector(il) {}
 
   array_types(const array_types & at) 
-    : init_list(at.init_list), array(at.array), vector(at.vector) 
+    : init_list(at.init_list), array(at.array), vector(at.init_list) 
   {
     std::copy(std::begin(at.builtin), std::end(at.builtin), builtin);
   }
@@ -66,7 +66,8 @@ int main()
   std::initializer_list<int> z;  
   z = { 1, 10 };
   std::initializer_list<int> x = { 1,2,3 };  
-  //auto y = {{1,2,3}};  
+  const auto y = {1,2,3};  
+  //x = y;
 
   //int array[3] = { 1,2,3 };
   //std::array<int, 3> foo = y;
