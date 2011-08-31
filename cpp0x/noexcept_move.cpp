@@ -3,17 +3,39 @@
 #include <utility>
 #include <cstdio>
 #include <array>
+#include <complex>
+#include <map>
+#include <tuple>
+
+template<typename... T>
+struct is_noexcept_swappable
+{
+  typedef std::tuple<T...> Tuple;
+  static Tuple *t; 
+  //enum { value = noexcept(std::swap(std::declval<aggregate &>(), std::declval<aggregate &>())) };
+  enum { value = noexcept(t->swap(std::declval<Tuple &>())) };
+};
 
 namespace nm {
 
-struct test 
+struct base 
+{
+  void swap(base &) {}
+};
+
+void swap(base &, base &) noexcept {}
+
+struct test : base
 {
   std::string str;
+  std::complex<double> cd;
+  std::map<int, std::string> m;
 
-  test() : str() {}
+
+  test() : str(), cd(), m() {}
   test(int i) : str("i") {}
   test(const test & t) 
-    : str(t.str) 
+    : str(t.str), cd(t.cd), m(t.m)
   {
       printf("%s\n", __PRETTY_FUNCTION__);
   }
@@ -22,24 +44,42 @@ struct test
 
   
   test(test && t) noexcept(noexcept(std::string(std::declval<std::string>())))
-    : str(std::move(t.str))
+    : str(std::move(t.str)), cd(std::move(t.cd)), m(std::move(t.m))
   {
     printf("%s\n", __PRETTY_FUNCTION__);
   }
  
-  void swap(test & t2) noexcept(noexcept(swap(std::declval<std::string &>(), std::declval<std::string &>())))
+  /*
+  void swap(test & t2) noexcept(noexcept(swap(std::declval<std::string &>(), 
+                                              std::declval<std::string &>())) &&
+                                noexcept(swap(std::declval<std::complex<double> &>(), 
+                                              std::declval<std::complex<double> &>())) &&
+                                noexcept(swap(std::declval<std::map<int, std::string> &>(), 
+                                              std::declval<std::map<int, std::string> &>())))
+  */
+  //void swap (test & t2) noexcept
+  void swap (test & t2) noexcept(is_noexcept_swappable<base, std::complex<double>/*, std::map<int, std::string>*/ >::value)
   {
-    std::swap(this->str, t2.str);  
+    using std::swap;
+    base::swap(*this);
+    swap(str, t2.str);
+    swap(cd, t2.cd);
+    swap(m, t2.m);
   }
 
   //~test () noexcept {}
 };
 
+void swap(test & t1, test &t2) noexcept(noexcept(t1.swap(t2)))
+{
+  t1.swap(t2);
+}
+
 } // namespce nm
 
 namespace std {
 template <>
-  inline void swap(nm::test & t1, nm::test & t2)
+  inline void swap(nm::test & t1, nm::test & t2) noexcept(noexcept(t1.swap(t2)))
   {
     t1.swap(t2); 
   }
@@ -47,6 +87,7 @@ template <>
 
 int main(void)
 {
+  
   nm::test t;
   std::vector<nm::test> v{5}; // uses initializer_list only if nm::test has a int constructor, otherwise creates 5 nm::test objects.
   v.reserve(20);
@@ -63,7 +104,7 @@ int main(void)
 
   typedef std::pair<int, nm::test> Pair;
   Pair p1, p2;
-  if(noexcept(std::swap(p1, p2)))
+  if(noexcept(swap(p1, p2)))
     printf("swap(pair &, pair&) does not throw exception.\n");
   else
     printf("swap(pair &, pair&) throws exception.\n");
