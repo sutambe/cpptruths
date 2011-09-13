@@ -8,12 +8,19 @@
 #include <tuple>
 
 template<typename... T>
-struct is_noexcept_swappable
+struct is_noexcept_swappable_all
 {
   typedef std::tuple<T...> Tuple;
   static Tuple *t; 
-  //enum { value = noexcept(std::swap(std::declval<aggregate &>(), std::declval<aggregate &>())) };
-  enum { value = noexcept(t->swap(std::declval<Tuple &>())) };
+  //enum { value = noexcept(t->swap(std::declval<Tuple &>())) };
+  enum { value =  noexcept(t->swap(*t)) };
+};
+
+template<typename... T>
+struct is_noexcept_movable_all
+{
+  typedef std::tuple<T...> Tuple;
+  enum { value = noexcept(Tuple(std::declval<Tuple>())) };
 };
 
 namespace nm {
@@ -23,7 +30,7 @@ struct base
   void swap(base &) {}
 };
 
-void swap(base &, base &) noexcept {}
+//void swap(base &, base &) {}
 
 struct test : base
 {
@@ -32,7 +39,7 @@ struct test : base
   std::map<int, std::string> m;
 
 
-  test() : str(), cd(), m() {}
+  test() noexcept : str(), cd(), m() {}
   test(int i) : str("i") {}
   test(const test & t) 
     : str(t.str), cd(t.cd), m(t.m)
@@ -40,15 +47,10 @@ struct test : base
       printf("%s\n", __PRETTY_FUNCTION__);
   }
 
-  // test(test && t) // depends on whether member's move-ctor throws or not.
-
-  
-  test(test && t) noexcept(noexcept(std::string(std::declval<std::string>())))
-    : str(std::move(t.str)), cd(std::move(t.cd)), m(std::move(t.m))
-  {
-    printf("%s\n", __PRETTY_FUNCTION__);
-  }
- 
+  test(test && t) // depends on whether member's move-ctor throws or not.
+    noexcept(std::is_nothrow_constructible<nm::test>::value &&
+             noexcept(t.swap(t))) 
+  { swap(); } 
   /*
   void swap(test & t2) noexcept(noexcept(swap(std::declval<std::string &>(), 
                                               std::declval<std::string &>())) &&
@@ -58,8 +60,11 @@ struct test : base
                                               std::declval<std::map<int, std::string> &>())))
   */
   //void swap (test & t2) noexcept
-  void swap (test & t2) noexcept(is_noexcept_swappable<base, std::complex<double>/*, std::map<int, std::string>*/ >::value)
+  void swap (test & t2) 
+    //noexcept(is_noexcept_swappable_all<base, std::complex<double>, std::string, std::map<int, std::string> >::value)
+    noexcept
   {
+    printf("%s\n", __PRETTY_FUNCTION__);
     using std::swap;
     base::swap(*this);
     swap(str, t2.str);
@@ -67,6 +72,24 @@ struct test : base
     swap(m, t2.m);
   }
 
+  // test (test && t) = default;
+  /*
+  test(test && t)  // = default;
+    noexcept(is_noexcept_movable_all<base, std::string, std::complex<double>, std::map<int, std::string>>::value)
+    : str(std::move(t.str)), cd(std::move(t.cd)), m(std::move(t.m))
+  {
+    printf("%s\n", __PRETTY_FUNCTION__);
+  }
+ */
+  
+  //test & operator = (test && t) = default;
+  test & operator = (const test &t)
+  {
+    printf("%s\n", __PRETTY_FUNCTION__);
+    test(t).swap(*this);
+    return *this;
+  }
+  
   //~test () noexcept {}
 };
 
@@ -76,7 +99,7 @@ void swap(test & t1, test &t2) noexcept(noexcept(t1.swap(t2)))
 }
 
 } // namespce nm
-
+/*
 namespace std {
 template <>
   inline void swap(nm::test & t1, nm::test & t2) noexcept(noexcept(t1.swap(t2)))
@@ -84,6 +107,7 @@ template <>
     t1.swap(t2); 
   }
 }
+*/
 
 int main(void)
 {
@@ -97,23 +121,23 @@ int main(void)
   else
     printf("test move constructor throws.\n");
 
-  if(noexcept(t.swap(t)))
-    printf("test::swap(test &) does not throw exception.\n");
+  using std::swap;
+  if(noexcept(swap(t,t)))
+    printf("swap(test &, test &) does not throw exception.\n");
   else
-    printf("test::swap(test &) throws exception.\n");
-
+    printf("swap(test &, test &) throws exception.\n");
+/*
   typedef std::pair<int, nm::test> Pair;
   Pair p1, p2;
   if(noexcept(swap(p1, p2)))
     printf("swap(pair &, pair&) does not throw exception.\n");
   else
     printf("swap(pair &, pair&) throws exception.\n");
-
-  p1 = p2;
-
-  std::array<nm::test, 5> test_array1, test_array2;
-
+*/
+  std::array<nm::test, 1> test_array1, test_array2;
+  printf("***** swapping ******\n");
   test_array1.swap(test_array2);
+
   //swap(t, t);
 
   /*
