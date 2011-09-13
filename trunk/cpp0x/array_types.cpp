@@ -54,8 +54,9 @@ class array_types
 
   void swap(array_types & at)
   {
-    std::swap(builtin, at.builtin);
-    std::swap(init_list, at.init_list);
+    using std::swap;
+    swap(builtin, at.builtin);
+    swap(init_list, at.init_list);
     array.swap(at.array);
     vector.swap(at.vector);
   }
