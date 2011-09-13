@@ -1,15 +1,38 @@
 #include <cstdio>
 #include <string>
 
+#ifdef WIN32
+typedef unsigned char uint8_t;
+typedef int int32_t;
+#endif
+
+struct print_string : std::string
+{
+  print_string() : std::string() {}
+
+  print_string(const print_string & ps) : std::string(ps) {
+    printf("copy-ctor\n");
+  }
+  print_string(print_string && ps) : std::string(std::move(ps)) {
+    printf("move-ctor\n");
+  }
+  print_string(const char *str) : std::string(str) {
+      printf("const char * ctor\n");
+  }
+  ~print_string() {
+    printf("destructor\n");
+  }
+};
+
 class Simple
 {
 public:
 
   // generated from c++/cli_hdr/struct_post.erb
   Simple (void);
-  Simple (const uint8_t& o,
+/*  Simple (const uint8_t& o,
           const int32_t& l,
-          const std::string& s,
+          const print_string& s,
           const double& d,
           const bool& b,
           const char& c)
@@ -20,7 +43,7 @@ public:
 
   Simple (uint8_t&& o,
           int32_t&& l,
-          std::string&& s,
+          print_string&& s,
           double&& d,
           bool&& b,
           char&& c)
@@ -28,11 +51,11 @@ public:
   { 
     printf("rvalue parameter constructor\n");
   }
-
-  /*
+*/
+  
   Simple (uint8_t o,
           int32_t l,
-          std::string s,
+          print_string s,
           double d,
           bool b,
           char c)
@@ -40,7 +63,7 @@ public:
   { 
     printf("pass-by-value parameter constructor\n");
   }
-*/
+
   Simple& operator= (const Simple& x);
   Simple& operator= (Simple&& x);
 
@@ -56,7 +79,7 @@ public:
 
   void s (const std::string& _s);
   void s (std::string&& _s);
-  const std::string& s (void) const;
+  const print_string& s (void) const;
   std::string& s (void);
 
   void d (const double& _d);
@@ -79,7 +102,7 @@ public:
 private:
   uint8_t o_;
   int32_t l_;
-  std::string s_;
+  print_string s_;
   double d_;
   bool b_;
   char c_;
@@ -87,11 +110,12 @@ private:
 
 int main(void)
 {
-  Simple s1(10, 20, "Sumant", 30.40, true, 'Z');
-  std::string name = "Sumant";
-  Simple s2(10, 20, name, 30.40, true, 'Z');
+  //Simple s1(10, 20, "Test", 30.40, true, 'Z');
+  //std::string name = "Test";
+  //Simple s2(10, 20, name, 30.40, true, 'Z');
+  
   uint8_t value = 200;
-  Simple s3(value, 20, "Sumant", 30.40, true, 'Z');
+  Simple s3(value, 20, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_", 30.40, true, 'Z'); // large string to ensure string is allocated.
 
 }
 
