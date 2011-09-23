@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <algorithm>
 
 #ifdef WIN32
 typedef unsigned char uint8_t;
@@ -17,7 +18,17 @@ struct print_string : std::string
     printf("move-ctor\n");
   }
   print_string(const char *str) : std::string(str) {
-      printf("const char * ctor\n");
+    printf("const char * ctor\n");
+  }
+  print_string & operator = (const print_string & ps) {
+    printf("operator = (&)\n");
+    std::string::operator = (ps);
+    return *this;
+  }
+  print_string & operator = (print_string && ps) {
+    printf("operator = (&&)\n");
+    std::string::operator = (std::move(ps));
+    return *this;
   }
   ~print_string() {
     printf("destructor\n");
@@ -30,7 +41,7 @@ public:
 
   // generated from c++/cli_hdr/struct_post.erb
   Simple (void);
-/*  Simple (const uint8_t& o,
+  Simple (const uint8_t& o,
           const int32_t& l,
           const print_string& s,
           const double& d,
@@ -51,8 +62,8 @@ public:
   { 
     printf("rvalue parameter constructor\n");
   }
-*/
-  
+
+/*  
   Simple (uint8_t o,
           int32_t l,
           print_string s,
@@ -63,7 +74,7 @@ public:
   { 
     printf("pass-by-value parameter constructor\n");
   }
-
+*/
   Simple& operator= (const Simple& x);
   Simple& operator= (Simple&& x);
 
@@ -116,6 +127,8 @@ int main(void)
   
   uint8_t value = 200;
   Simple s3(value, 20, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_", 30.40, true, 'Z'); // large string to ensure string is allocated.
+  print_string ps[5] {"A", "B", "C", "D", "E" };
+  std::remove(std::begin(ps), std::end(ps), "B");
 
 }
 
