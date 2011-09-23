@@ -47,10 +47,6 @@ struct test : base
       printf("%s\n", __PRETTY_FUNCTION__);
   }
 
-  test(test && t) // depends on whether member's move-ctor throws or not.
-    noexcept(std::is_nothrow_constructible<nm::test>::value &&
-             noexcept(t.swap(t))) 
-  { swap(); } 
   /*
   void swap(test & t2) noexcept(noexcept(swap(std::declval<std::string &>(), 
                                               std::declval<std::string &>())) &&
@@ -61,8 +57,7 @@ struct test : base
   */
   //void swap (test & t2) noexcept
   void swap (test & t2) 
-    //noexcept(is_noexcept_swappable_all<base, std::complex<double>, std::string, std::map<int, std::string> >::value)
-    noexcept
+    noexcept(is_noexcept_swappable_all<base, std::complex<double>, std::string, std::map<int, std::string> >::value)
   {
     printf("%s\n", __PRETTY_FUNCTION__);
     using std::swap;
@@ -72,6 +67,11 @@ struct test : base
     swap(m, t2.m);
   }
 
+  test(test && t) // depends on whether member's move-ctor throws or not.
+  //  noexcept(std::is_nothrow_constructible<nm::test>::value &&
+  //           noexcept(t.swap(t))) 
+    noexcept
+  { swap(t); } 
   // test (test && t) = default;
   /*
   test(test && t)  // = default;
