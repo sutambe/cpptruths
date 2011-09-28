@@ -27,8 +27,8 @@ public:
     typedef T Type;
   };
 
-  //friend class wrapper::Type;
-  friend class T;
+  friend class wrapper::Type;  // Supported by g++ but not by VC2010, Comeau
+  //friend class T; // not supported on C++03 compilers 
 };
 
 template<class T>
