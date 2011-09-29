@@ -15,9 +15,9 @@ int main(void)
   try {
     base *b = new derived();
     b = 0;
-    //printf("%s\n", typeid(*b).name());             // VC2010 throws if b is null.
-    //printf("%s\n", typeid(1 ? *b : *b).name());  // VC2010 does not throw if b is null.
-    //printf("%s\n", typeid(nonnull(*b)).name());  // VC2010 throws if b is null.
+    //printf("%s\n", typeid(*b).name());             // g++47 and VC2010 throws if b is null.
+    //printf("%s\n", typeid(1 ? *b : *b).name());    // VC2010 does not throw if b is null. g++47 throws.
+    printf("%s\n", typeid(nonnull(*b)).name());      // VC2010 throws if b is null. g++47 seg-fault.
   }
   catch(const std::exception & e)
   {
