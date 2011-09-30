@@ -19,6 +19,9 @@ public:
  C(int x) : len(x) {}
 };
 
+// anonynous structs work on VC2010 and gcc
+// does not work on clang++ and Comeau
+
 int main(void)
 {
   x=5; //members of an anonymous union are accessed directly
