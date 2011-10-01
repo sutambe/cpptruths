@@ -212,6 +212,7 @@ class DataWriterQosImpl
     void policy(const dds::core::policy::Deadline      & d)  { deadline_ = d; }
     void policy(const dds::core::policy::LatencyBudget & lb) { latency_budget_ = lb; }
     void policy(const dds::core::policy::Reliability   & r)  { reliability_ = r; }
+    void my_extension() {} 
 };
 
 template <>
@@ -270,10 +271,11 @@ int main(void)
   //dwqos << p;      // Compile-time error.
   
   //dwqos >> p;  // no compile-time error.
-  p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error.
-  dwqos.policy<dds::core::policy::Presentation>().set_pres(10); // no compile-time error.
+  p = dwqos.policy<dds::core::policy::Presentation>(); // no compile-time error, only link-time error.
+  dwqos.policy<dds::core::policy::Presentation>().set_pres(10); // no compile-time error, only link-time error.
   
   dwqos >> d;
   d = dwqos.policy<dds::core::policy::Deadline>();
+  dwqos->my_extension();
 }
 
