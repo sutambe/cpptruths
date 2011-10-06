@@ -1,4 +1,6 @@
+#ifdef WIN32
 #include "stdafx.h"
+#endif
 
 #include <iostream>
 #include <vector>
@@ -245,7 +247,12 @@ int main(void)
   std::cout << std::endl;
   
   // non-mutable
-   auto bound = [] (int x) { return x*x; };
+  auto bound = [] (int x) throw() { return x*x; };
+  if(noexcept(bound(std::declval<int>())))
+    std::cout << "bound does not throw\n";
+  else
+    std::cout << "bound throws\n";
+
   // auto bound = std::bind([] (int x, int y) { return x + y; }, _1, 5); // -VS2010, +g++4.5
   // auto bound = std::less<int>(std::bind1st([] (int x, int y) { return x < y; }, 10.5)); // -VS2010, -g++45
   // auto bound = std::bind1st(BF(), 10.5); // +VS2010. +g++45 Fails at run-time because BF is empty.
@@ -266,8 +273,8 @@ int main(void)
 
   std::cout << "bound = " << bound(5) << std::endl;
 
-  boost::unary_traits<decltype(bound)>::argument_type arg;
-  boost::unary_traits<decltype(bound)>::result_type result;
+  //boost::unary_traits<decltype(bound)>::argument_type arg;
+  //boost::unary_traits<decltype(bound)>::result_type result;
 
 
   AdaptAsUnary([](double d){ return d; });
