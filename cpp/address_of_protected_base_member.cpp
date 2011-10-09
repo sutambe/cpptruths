@@ -21,7 +21,13 @@ class B: private A
   
   void bar ()
   {
-    void (A::*ptr)() = & A::func;
+    // Calling func through a pointer or object of A is not allowed. 
+    // Compiler support varies: Clang accepted all. gcc accepted the above
+    // template and VC2010 and Comeau rejected it all.
+    void (A::*ptr)() = & A::func; // not allowed.
+    A a;
+    a.func(); // not allowed.
+    A::func(); // This is allowed.
   }
 };
 
