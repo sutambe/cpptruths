@@ -4,22 +4,19 @@ typedef int (*OUTPUT_FPTR)(int, size_t, double);
 typedef int (*FPTR)(...);
 typedef int (*NOTHING_FPTR)();
 
-int oprintf(OUTPUT_FPTR, const char *)
-{
-  printf("OUTPUT_FPTR\n");
-  return 0;
-}
+extern "C" { // Turns off C++ mode so overloading is not allowed.
 
-int oprintf(FPTR, const char *)
+extern int oprintf(OUTPUT_FPTR, const char *i, ...);
+extern int oprintf(FPTR, const char *, ...) __attribute__((deprecated));
+
+extern int oprintf(FPTR, const char *, ...) 
 {
   printf("FPTR\n");
   return 0;
 }
 
-int oprintf(NOTHING_FPTR, const char *)
-{
-  printf("NOTHING_FPTR\n");
-  return 0;
+extern int oprintf(NOTHING_FPTR, const char *, ...);
+
 }
 
 int func(int, size_t, double) 
@@ -39,3 +36,16 @@ int main (void)
   oprintf(main,"test");
   return 0;
 }
+
+extern int oprintf(OUTPUT_FPTR, const char *i, ...)
+{
+  printf("OUTPUT_FPTR\n");
+  return 0;
+}
+
+extern int oprintf(NOTHING_FPTR, const char *, ...)
+{
+  printf("NOTHING_FPTR\n");
+  return 0;
+}
+
