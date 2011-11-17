@@ -3,8 +3,6 @@
 #include <iterator>
 #include <iostream>
 
-class Matrix;
-
 void do_addition(int * dest, const int * src1, const int * src2, size_t dim)
 {
   for(size_t i = 0; i < dim * dim; ++i, ++dest, ++src1, ++src2)
@@ -17,6 +15,68 @@ void do_self_addition(int * dest, const int * src, size_t dim)
     *dest += *src;
 }
 
+void populate(int *data, size_t dim)
+{
+  for(size_t i = 0;i < dim * dim; ++i)
+    data[i] = i*i;
+}
+
+#ifdef NO_TBCI
+
+class Matrix
+{
+  size_t dim;
+  int * data;
+
+public:
+  
+  explicit Matrix(size_t d)
+    : dim(d), data(new int[dim*dim]())
+  {
+    populate(data, dim);
+  }
+
+  Matrix(const Matrix & m)
+    : dim(m.dim), data(new int[dim*dim]())
+  {
+    std::copy(data, data + (dim*dim), m.data);
+  }
+
+  Matrix & operator = (const Matrix & m)
+  {
+    Matrix(m).swap(*this);
+    return *this;
+  }
+
+  void swap(Matrix & m)
+  {
+    std::swap(dim, m.dim);
+    std::swap(data, m.data);
+  }
+
+  Matrix operator + (const Matrix & m) const
+  {
+    Matrix result(this->dim);
+    do_addition(result.data, this->data, m.data, dim);
+    return result;
+  }
+
+  ~Matrix()
+  {
+    delete [] data;
+  }
+
+  void print()
+  {
+    std::copy(data, data + (dim*dim), std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
+  }
+};
+
+#else
+
+class Matrix;
+
 class TMatrix 
 {
   size_t dim;
@@ -26,7 +86,7 @@ class TMatrix
   void real_destroy();
  
 public:
-  TMatrix(size_t d);
+  explicit TMatrix(size_t d);
   TMatrix(const TMatrix & tm);
   TMatrix(const Matrix & m);
   TMatrix & operator = (const Matrix & m);
@@ -44,7 +104,7 @@ public:
 class Matrix : public TMatrix 
 {
 public:
-  Matrix(size_t dim);
+  explicit Matrix(size_t dim);
   Matrix(const Matrix & tm);
   Matrix(const TMatrix & tm);
   Matrix & operator = (const Matrix & m);
@@ -60,8 +120,7 @@ public:
 TMatrix::TMatrix(size_t d) 
 : dim(d), data (new int[dim*dim]()), freeable(0)
 {
-  for(size_t i = 0;i < dim * dim; ++i)
-    data[i] = i*i;
+  populate(data, dim);
 }
 
 TMatrix::TMatrix(const TMatrix & tm)
@@ -87,7 +146,7 @@ TMatrix & TMatrix::operator = (const TMatrix & tm)
   real_destroy();
   dim = tm.dim;
   data = tm.data;
-  freeable = tm.freeable;
+  freeable = 0;
   return *this;
 }
 
@@ -133,7 +192,7 @@ Matrix::Matrix(const Matrix & m)
 : TMatrix(m)
 {}
 
-Matrix & Matrix::operator = (const Matrix & m)
+Matrix & Matrix::operator = (const Matrix &m)
 {
   Matrix temp(m);
   temp.swap(*this);
@@ -142,7 +201,11 @@ Matrix & Matrix::operator = (const Matrix & m)
 
 Matrix & Matrix::operator = (const TMatrix & tm)
 {
-  return static_cast<Matrix &> (TMatrix::operator = (tm));
+  real_destroy();
+  dim = tm.dim;
+  data = tm.data;
+  freeable = 0;
+  return *this;
 }
 
 TMatrix Matrix::operator + (const Matrix & m) const
@@ -170,14 +233,16 @@ void TMatrix::print()
   std::cout << std::endl;
 }
 
+#endif // NO_TBCI
+
 int main(void)
 {
   const int DIMS = 3;
   Matrix m1(DIMS), m2(DIMS), m3(DIMS);
   
-  Matrix result = (m1 + m2) + m3;
+  Matrix result = (m1 + m2) + m3 + m3 + m3 + m3 + m3;
   result.print(); 
-  
+   
   result = m1 + (m2 + m3);
   result.print(); 
   
@@ -186,4 +251,5 @@ int main(void)
   
   result = ((m1 + m3) = (m2 + m3));
   result.print(); 
+  
 }
