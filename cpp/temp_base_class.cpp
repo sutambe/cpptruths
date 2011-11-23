@@ -39,7 +39,7 @@ public:
   Matrix(const Matrix & m)
     : dim(m.dim), data(new int[dim*dim]())
   {
-    std::copy(data, data + (dim*dim), m.data);
+    std::copy(m.data, m.data + (m.dim*m.dim), data);
   }
 
   Matrix & operator = (const Matrix & m)
@@ -130,14 +130,12 @@ TMatrix::TMatrix(const TMatrix & tm)
 TMatrix::TMatrix(const Matrix & m)
 : dim(m.dim), data(new int[dim*dim]), freeable(0)
 {
-  std::copy(data, data + dim*dim, m.data);
+  std::copy(m.data, m.data + (m.dim*m.dim), data);
 }
 
 TMatrix & TMatrix::operator = (const Matrix & m)
 {
-  TMatrix temp(m);
-  temp.swap(*this);
-  temp.freeable = 1;
+  std::copy(m.data, m.data + (m.dim * m.dim), data);
   return *this;
 }
 
@@ -249,7 +247,9 @@ int main(void)
   result = (m1 + m3) + (m2 + m3);
   result.print(); 
   
-  result = ((m1 + m3) = (m2 + m3));
+  result = ((m1 + m3) = (m2));
   result.print(); 
   
+  result = ((m1 + m3) = (m2 + m3));
+  result.print(); 
 }
