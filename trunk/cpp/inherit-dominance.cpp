@@ -1,6 +1,6 @@
 /*
-Visual Studio:
-cl.exe inherit-dominance.cpp /EHsc /W2
+Warning on Visual Studio: cl.exe inherit-dominance.cpp /EHsc /W2
+No warning on Comeau, gcc 4.7, clang
 
 */
 
@@ -11,8 +11,9 @@ struct base {
 };
 
 struct weak : public virtual base {   
+  using base::number;
   void print() { // seems to only depend on base, but depends on dominant
-    std::cout << number() << std::endl;   
+    std::cout << number() << std::endl;   // template method pattern.
   }
 };
 
@@ -21,7 +22,12 @@ struct dominant : public virtual base {
 };
 
 struct derived : public weak, public dominant 
-{};
+{
+  using weak::number;
+  /*int number() {
+    return weak::number();
+  }*/
+};
 
 int main() {   
   weak w; 
