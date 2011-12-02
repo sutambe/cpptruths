@@ -12,12 +12,12 @@ typedef std::auto_ptr<X> RETURN;
 
 RETURN Xfactory() // Resource ownership explicitely transferred to the caller.
 {
-    return RETURN(new X); // Dynamically allocated instance
+    return RETURN(new RETURN::element_type); // Dynamically allocated instance
 }
 int main (void)
 {
-  RETURN r;
-  r = Xfactory();
+  //RETURN r;
+  RETURN r = Xfactory();
   r->foo(); // Dynamically allocated instance of X does not leak here
   return 0;
 }
