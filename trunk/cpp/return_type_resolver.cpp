@@ -38,10 +38,12 @@ class getRandomN {
     getRandomN(int n = 5) : count(n) {}
 
     template <class Container>
-      operator Container () {
+    operator Container () 
+    {
         Container c;
         for(size_t i = 0;i < count; ++i)
           c.insert(c.end(), rand());
+          //c.push_back(rand());
         return c;
     }
 };
@@ -62,9 +64,18 @@ int main()
     bool b;
     b = resolver;
 
-    // std::auto_ptr<int> ap = MakeSmartPtr(); // does not compile
-    // boost::scoped_ptr<int> sc_ptr = MakeSmartPtr(); // does not compile
-    boost::shared_ptr<int> sh_ptr = MakeSmartPtr();
+    std::auto_ptr<int> ap = MakeSmartPtr(); 
+    // This idiom does not work with std::auto_ptr because the compiler must
+    // attempt two type conversions to accomplish it but C++ allows exactly
+    // one type conversion from rvalue to lvalue. MakeSmartPtr uses the first
+    // slot for automatic type conversion so there is no slot left for
+    // std::auto_ptr's magic through auto_ptr_ref for returning by value
+    // from a function.
+    
+    // boost::scoped_ptr<int> sc_ptr = MakeSmartPtr(); 
+    // Does not compile because scoped_ptr can't be returned.
+    
+    boost::shared_ptr<int> sh_ptr = MakeSmartPtr(); // works!
 
     std::set<int> random_s = getRandomN(10);
     std::vector<int> random_v = getRandomN(10);
