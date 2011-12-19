@@ -41,7 +41,7 @@ class MovableResource
     MovableResource (MovableResource &m) throw ();
     //MovableResource (const MovableResource &m) throw ();
     MovableResource & operator = (MovableResource &m) throw ();
-    MovableResource & operator = (const MovableResource &m) throw ();
+    //MovableResource & operator = (const MovableResource &m) throw ();
 /*  
   public:
     MovableResource (MovableResource &m) throw () // Move constructor
@@ -87,25 +87,57 @@ class MovableResource
     }     
 };
 
+/*
+template <class T>
+MovableResource<T> move(MovableResource<T> mr) // Convert to a reference to rvalue
+{
+  return MovableResource<T>(detail::proxy<T>(mr));
+}
+*/
+
+template <class T>
+MovableResource<T> move(MovableResource<T> & mr) // Convert to a reference to rvalue
+{
+  return MovableResource<T>(detail::proxy<T>(mr));
+}
+
+template <class T>
+MovableResource<T> move(detail::proxy<T> proxy) // Convert to a reference to rvalue
+{
+  return MovableResource<T>(proxy);
+}
+
+/* 
+// This straight-forward conversion does not work.
 template <class T>
 detail::proxy<T> move(MovableResource<T> & mr)
 {
   return detail::proxy<T> (mr);
 }
+*/
 
-MovableResource<int> f () 
+MovableResource<int> source() 
 { 
+  std::cout << "source\n";
   MovableResource<int> mr (new int(999)); 
   return move(mr);
 }
 
+void sink(MovableResource<int> mr) 
+{ 
+  std::cout << "sink\n";
+}
+
 int main ()
 {
-  MovableResource<int> mr(f());
+  source();
+  MovableResource<int> mr(move(source()));
   MovableResource<int> mr2; //(mr);
   mr2 = move(mr);
-  mr2 = mr;
+  sink(move(mr2));
+  //mr2 = mr;
   
   std::cout << "All temporaries should be gone by now" << std::endl;
 }
+
 
