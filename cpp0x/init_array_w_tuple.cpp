@@ -51,9 +51,19 @@ make_tuple_array(Args&&... args)
   return TupleArray(std::tuple<Args...>(std::forward<Args>(args)...)); 
 }
 
+template<class T, class... Tail>
+std::array<T, sizeof...(Tail)+1> make_array(T&& head, Tail&&... values)
+{
+  return std::array<T, sizeof...(Tail)+1> {{
+                    std::forward<T>(head),
+                    std::forward<T>(values)...
+                  }};
+}
+
 int main(void)
 {
-  auto array = make_tuple_array(10, 20, 30, 40, 50);
+  auto t_array = make_tuple_array(10, 20, 30, 40, 50);
+  auto array = make_array<int>(10, 20.20, 30, 40);
   for(size_t i = 0;i < array.size(); ++i)
   {
     std::cout << array[i] << " ";
