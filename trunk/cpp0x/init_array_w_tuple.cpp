@@ -3,10 +3,8 @@
 #include <iostream>
 
 template <size_t I, typename Array, typename Tuple>
-class Assign
+struct Assign
 {
-  public:
-
   static void execute(Array &a, Tuple const & tuple)
   {
     a[I] = std::get<I>(tuple);
@@ -15,10 +13,8 @@ class Assign
 };
 
 template <typename Array, typename Tuple>
-class Assign <0, Array, Tuple>
+struct Assign <0, Array, Tuple>
 {
-  public:
-
   static void execute(Array &a, Tuple const & tuple)
   {
     a[0] = std::get<0>(tuple);
@@ -28,7 +24,7 @@ class Assign <0, Array, Tuple>
 template <class T, size_t N>
 class tuple_array : public std::array<T, N>
 {
-  typedef std::array<T, N> Super;
+    typedef std::array<T, N> Super;
 
   public:
    
@@ -50,7 +46,8 @@ template <typename... Args>
 tuple_array<typename std::tuple_element<0, std::tuple<Args...>>::type, sizeof...(Args)> 
 make_tuple_array(Args&&... args)
 {
-  typedef tuple_array<typename std::tuple_element<0, std::tuple<Args...>>::type, sizeof...(Args)> TupleArray; 
+  typedef typename std::tuple_element<0, std::tuple<Args...>>::type ArgType;
+  typedef tuple_array<ArgType, sizeof...(Args)> TupleArray; 
   return TupleArray(std::tuple<Args...>(std::forward<Args>(args)...)); 
 }
 
