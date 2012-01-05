@@ -19,7 +19,11 @@ struct B : A
 int main(void)
 {
   A * array = new B[4];
-
+   
+  printf("%p %p\n", array, &array->a); 
+  // Printed addresses are different by 4 bytes because 
+  // the vtable pointer is at the beginning of the object.
+  // Location of the vtable pointer is not standardized.
   for(int i = 0;i < 4; ++i)
   {
     array[i].print();
