@@ -9,25 +9,18 @@ class tuple_storage
 {
   protected:
     Tuple & tuple;
-    size_t index;
+    int index;
 
     bool is_same_iter(tuple_storage const &ts) const {
       return (&tuple == &ts.tuple) && (index == ts.index);
     }
 
-    T & get() const
-    {
+    T & get() const {
       throw std::out_of_range("Tuple iterator accessed out of valid range.");
     }
 
-    template <size_t I>
-    T & value()
-    {
-      return std::get<I>(tuple);
-    }
-
   public:
-    tuple_storage(Tuple &t, size_t i) 
+    tuple_storage(Tuple &t, int i) 
       : tuple(t), index(i) {}
 };
 
@@ -36,16 +29,11 @@ class tuple_index : protected tuple_index<I-1, T, Tuple>
 {
     typedef tuple_index<I-1, T, Tuple> Super;
   protected:
-    T & get() const
-    {
-      if(Super::index == I) 
-        //return Super::value<I>();
-        return std::get<I>(Super::tuple);
-      else
-        return Super::get();
+    T & get() const {
+      return (Super::index == I) ? std::get<I>(Super::tuple) : Super::get();
     }
   public:
-    tuple_index(Tuple &t, size_t i) : Super(t, i) {}
+    tuple_index(Tuple &t, int i) : Super(t, i) {}
 };
 
 template <typename T, typename Tuple>
@@ -53,33 +41,28 @@ class tuple_index<0, T, Tuple> : protected tuple_storage<T, Tuple>
 {
     typedef tuple_storage<T, Tuple> Super;
   protected:
-    T & get()const 
-    {
-      if(Super::index == 0) 
-        //return Super::value<0>() 
-        return std::get<0>(Super::tuple);
-      else
-        return Super::get();
+    T & get()const {
+      return (Super::index == 0) ? std::get<0>(Super::tuple) : Super::get();
     }
   public:
-    tuple_index(Tuple &t, size_t i) : Super(t, i) {}
+    tuple_index(Tuple &t, int i) : Super(t, i) {}
 };
 
 template <typename Tuple>
 class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
                                              typename std::tuple_element<0, Tuple>::type,
                                              Tuple>,
-                       public std::iterator <std::forward_iterator_tag,
+                       public std::iterator <std::bidirectional_iterator_tag,
                                              typename std::tuple_element<0, Tuple>::type>
 
 {
-   typedef typename std::tuple_element<0, Tuple>::type Head;
+   typedef typename std::tuple_element<0, Tuple>::type T;
    enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
-   typedef tuple_index<TUPLE_SIZE-1, Head, Tuple> Super;
+   typedef tuple_index<TUPLE_SIZE-1, T, Tuple> Super;
 
   public:
-    tuple_iterator(Tuple &t, size_t i = TUPLE_SIZE) : Super(t, i) {}
-    Head & operator *() const {
+    tuple_iterator(Tuple &t, int i = TUPLE_SIZE) : Super(t, i) {}
+    T & operator *() const {
       return Super::get();
     }
     tuple_iterator & operator ++ () 
@@ -94,6 +77,18 @@ class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
       ++(*this);
       return temp;
     }
+    tuple_iterator & operator -- () 
+    {
+      if(Super::index >= 0)
+        --Super::index;
+      return *this;
+    }
+    tuple_iterator operator -- (int) 
+    {
+      tuple_iterator temp(*this);
+      --(*this);
+      return temp;
+    }
     bool operator == (tuple_iterator const & ti) const {
       return Super::is_same_iter(ti);
     }
@@ -102,16 +97,29 @@ class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
     }
 };
 
-template <typename Tuple>
-tuple_iterator<Tuple> begin(Tuple &t)
+template <>
+class tuple_iterator <std::tuple<>> 
 {
-  return tuple_iterator<Tuple>(t, 0);
+    void operator * ();
+    tuple_iterator & operator ++ ();
+    tuple_iterator   operator ++ (int);
+    tuple_iterator & operator -- ();
+    tuple_iterator   operator -- (int);
+
+  public:
+    tuple_iterator(std::tuple<>, size_t i = 0) {}
+};
+
+template <typename... Args>
+tuple_iterator<std::tuple<Args...>> begin(std::tuple<Args...> &t)
+{
+  return tuple_iterator<std::tuple<Args...>>(t, 0);
 }
 
-template <typename Tuple>
-tuple_iterator<Tuple> end(Tuple &t)
+template <typename... Args>
+tuple_iterator<std::tuple<Args...>> end(std::tuple<Args...> &t)
 {
-  return tuple_iterator<Tuple>(t);
+  return tuple_iterator<std::tuple<Args...>>(t);
 }
 
 int main(void)
