@@ -38,7 +38,11 @@ class tuple_index : protected tuple_index<I-1, T, Tuple>
   protected:
     T & get() const
     {
-      return (Super::index == I) ? Super::value<I>() : Super::get();
+      if(Super::index == I) 
+        //return Super::value<I>();
+        return std::get<I>(Super::tuple);
+      else
+        return Super::get();
     }
   public:
     tuple_index(Tuple &t, size_t i) : Super(t, i) {}
@@ -51,14 +55,18 @@ class tuple_index<0, T, Tuple> : protected tuple_storage<T, Tuple>
   protected:
     T & get()const 
     {
-      return (Super::index == 0) ? Super::value<0>() : Super::get();
+      if(Super::index == 0) 
+        //return Super::value<0>() 
+        return std::get<0>(Super::tuple);
+      else
+        return Super::get();
     }
   public:
     tuple_index(Tuple &t, size_t i) : Super(t, i) {}
 };
 
 template <typename Tuple>
-class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value,
+class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
                                              typename std::tuple_element<0, Tuple>::type,
                                              Tuple>,
                        public std::iterator <std::forward_iterator_tag,
@@ -67,7 +75,7 @@ class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value,
 {
    typedef typename std::tuple_element<0, Tuple>::type Head;
    enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
-   typedef tuple_index<TUPLE_SIZE, Head, Tuple> Super;
+   typedef tuple_index<TUPLE_SIZE-1, Head, Tuple> Super;
 
   public:
     tuple_iterator(Tuple &t, size_t i = TUPLE_SIZE) : Super(t, i) {}
@@ -108,10 +116,10 @@ tuple_iterator<Tuple> end(Tuple &t)
 
 int main(void)
 {
-  typedef std::tuple<int, int, int> ThreeIntTuple;
-  ThreeIntTuple t (10, 20, 30);
-  tuple_iterator<ThreeIntTuple> titer(t);
-  std::copy(begin(t), end(t), std::ostream_iterator<int>(std::cout));
+  auto tuple = std::make_tuple(10, 20, 30, 40);
+  tuple_iterator<decltype(tuple)> titer(tuple);
+  std::copy(begin(tuple), end(tuple), std::ostream_iterator<int>(std::cout, " "));
+  std::cout << std::endl;
 
   return 0;
 }
