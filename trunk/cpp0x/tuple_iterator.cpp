@@ -4,71 +4,71 @@
 #include <algorithm>
 #include <iterator>
 
-template <typename T, typename Tuple>
-class tuple_storage
+template <typename Tuple,
+          size_t I = std::tuple_size<Tuple>::value-1>
+class TupleAt
 {
-  protected:
-    Tuple & tuple;
-    int index;
-
-    bool is_same_iter(tuple_storage const &ts) const {
-      return (&tuple == &ts.tuple) && (index == ts.index);
-    }
-
-    T & get() const {
-      throw std::out_of_range("Tuple iterator accessed out of valid range.");
-    }
+    typedef typename std::tuple_element<0, Tuple>::type T;
 
   public:
-    tuple_storage(Tuple &t, int i) 
-      : tuple(t), index(i) {}
-};
-
-template <size_t I, typename T, typename Tuple>
-class tuple_index : protected tuple_index<I-1, T, Tuple>
-{
-    typedef tuple_index<I-1, T, Tuple> Super;
-  protected:
-    T & get() const {
-      return (Super::index == I) ? std::get<I>(Super::tuple) : Super::get();
+    static T & get(Tuple & tuple, size_t index)
+    {
+      return (index == I)? std::get<I>(tuple) : TupleAt<Tuple, I-1>::get(tuple, index);
     }
-  public:
-    tuple_index(Tuple &t, int i) : Super(t, i) {}
-};
-
-template <typename T, typename Tuple>
-class tuple_index<0, T, Tuple> : protected tuple_storage<T, Tuple>
-{
-    typedef tuple_storage<T, Tuple> Super;
-  protected:
-    T & get()const {
-      return (Super::index == 0) ? std::get<0>(Super::tuple) : Super::get();
+    static const T & get_const(const Tuple & tuple, size_t index)
+    {
+      return (index == I)? std::get<I>(tuple) : TupleAt<Tuple, I-1>::get_const(tuple, index);
     }
-  public:
-    tuple_index(Tuple &t, int i) : Super(t, i) {}
 };
 
 template <typename Tuple>
-class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
-                                             typename std::tuple_element<0, Tuple>::type,
-                                             Tuple>,
-                       public std::iterator <std::bidirectional_iterator_tag,
+class TupleAt<Tuple, 0>
+{
+    typedef typename std::tuple_element<0, Tuple>::type T;
+  public:
+
+    static T & get(Tuple & tuple, size_t index)
+    {
+      if(index == 0)
+        return std::get<0>(tuple);
+      else
+        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+    }
+    static const T & get_const(const Tuple & tuple, size_t index)
+    {
+      if(index == 0)
+        return std::get<0>(tuple);
+      else
+        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+    }
+};
+
+template <typename Tuple>
+class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
                                              typename std::tuple_element<0, Tuple>::type>
 
 {
-   typedef typename std::tuple_element<0, Tuple>::type T;
-   enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
-   typedef tuple_index<TUPLE_SIZE-1, T, Tuple> Super;
+    typedef typename std::tuple_element<0, Tuple>::type T;
+    enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
+   
+    Tuple * tuple;
+    int index;
 
-  public:
-    tuple_iterator(Tuple &t, int i = TUPLE_SIZE) : Super(t, i) {}
-    T & operator *() const {
-      return Super::get();
+ public:
+  
+    typedef int difference_type; 
+
+    explicit tuple_iterator(Tuple & t, int i = TUPLE_SIZE) 
+      : tuple(&t), index(i) 
+    {}
+    T & operator *() const 
+    {
+      return TupleAt<Tuple>::get(*tuple, index);
     }
     tuple_iterator & operator ++ () 
     {
-      if(Super::index < TUPLE_SIZE)
-        ++Super::index;
+      if(index < TUPLE_SIZE)
+        ++index;
       return *this;
     }
     tuple_iterator operator ++ (int) 
@@ -79,8 +79,8 @@ class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
     }
     tuple_iterator & operator -- () 
     {
-      if(Super::index >= 0)
-        --Super::index;
+      if(index >= 0)
+        --index;
       return *this;
     }
     tuple_iterator operator -- (int) 
@@ -89,8 +89,36 @@ class tuple_iterator : protected tuple_index<std::tuple_size<Tuple>::value - 1,
       --(*this);
       return temp;
     }
+    tuple_iterator operator - (int i)
+    {
+      tuple_iterator temp(*tuple, index-i);
+      return temp;
+    }
+    tuple_iterator & operator -= (int i)
+    {
+      index-=i;
+      return *this;
+    }
+    tuple_iterator operator + (int i)
+    {
+      tuple_iterator temp(*tuple, index+i);
+      return temp;
+    }
+    tuple_iterator & operator += (int i)
+    {
+      index+=i;
+      return *this;
+    }
+    difference_type operator - (const tuple_iterator & ti)
+    {
+      return index - ti.index;
+    }
+    bool operator < (const tuple_iterator &ti)
+    {
+      return index < ti.index;
+    }
     bool operator == (tuple_iterator const & ti) const {
-      return Super::is_same_iter(ti);
+      return (tuple == ti.tuple) && (index == ti.index);
     }
     bool operator != (tuple_iterator const & ti) const {
       return !(*this == ti);
@@ -122,12 +150,49 @@ tuple_iterator<std::tuple<Args...>> end(std::tuple<Args...> &t)
   return tuple_iterator<std::tuple<Args...>>(t);
 }
 
+#define USING(Dervied, Base)                                 \
+      template<typename ...Args,                             \
+             typename = typename std::enable_if              \
+             <                                               \
+                std::is_constructible<Base, Args...>::value  \
+             >::type>                                        \
+    Dervied(Args &&...args)                                  \
+        : Base(std::forward<Args>(args)...) { }              \
+
+template <typename... T>
+class tuple_array : public std::tuple<T...>
+{
+   typedef std::tuple<T...> Tuple;
+   typedef typename std::tuple_element<0, Tuple>::type HeadType;
+
+  public:
+    USING(tuple_array, Tuple);
+
+    HeadType & operator [] (size_t index) 
+    {
+      return TupleAt<Tuple>::get(*this, index);
+    }
+    const HeadType & operator [] (size_t index) const
+    {
+      return TupleAt<Tuple>::get_const(*this, index);
+    }
+};
+
 int main(void)
 {
   auto tuple = std::make_tuple(10, 20, 30, 40);
   tuple_iterator<decltype(tuple)> titer(tuple);
   std::copy(begin(tuple), end(tuple), std::ostream_iterator<int>(std::cout, " "));
   std::cout << std::endl;
+  tuple_array<int, int, int> ta{4, 2, 1};
+  std::cout << ta[0] << std::endl;
+  std::cout << ta[1] << std::endl;
+  std::sort(begin(ta), end(ta));
+
+  for(int i : ta)
+  {
+    std::cout << i <<std::endl;
+  }
 
   return 0;
 }
