@@ -119,6 +119,18 @@ class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
     {
       return index < ti.index;
     }
+    bool operator > (const tuple_iterator &ti)
+    {
+      return index > ti.index;
+    }
+    bool operator <= (const tuple_iterator &ti)
+    {
+      return index <= ti.index;
+    }
+    bool operator >= (const tuple_iterator &ti)
+    {
+      return index >= ti.index;
+    }
     bool operator == (tuple_iterator const & ti) const {
       return (tuple == ti.tuple) && (index == ti.index);
     }
