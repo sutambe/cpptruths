@@ -29,17 +29,11 @@ class TupleAt<Tuple, 0>
 
     static T & get(Tuple & tuple, size_t index)
     {
-      if(index == 0)
-        return std::get<0>(tuple);
-      else
-        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+      return std::get<0>(tuple);
     }
     static const T & get_const(const Tuple & tuple, size_t index)
     {
-      if(index == 0)
-        return std::get<0>(tuple);
-      else
-        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+      return std::get<0>(tuple);
     }
 };
 
@@ -61,9 +55,17 @@ class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
     explicit tuple_iterator(Tuple & t, int i = TUPLE_SIZE) 
       : tuple(&t), index(i) 
     {}
-    T & operator *() const 
+    T & operator *()
     {
       return TupleAt<Tuple>::get(*tuple, index);
+    }
+    T * operator ->()
+    {
+      return & TupleAt<Tuple>::get(*tuple, index);
+    }
+    T & operator [] (int offset)
+    {
+      return TupleAt<Tuple>::get(*tuple, index+offset);
     }
     tuple_iterator & operator ++ () 
     {
@@ -162,8 +164,9 @@ tuple_iterator<std::tuple<Args...>> end(std::tuple<Args...> &t)
 template <typename... T>
 class tuple_array : public std::tuple<T...>
 {
-   typedef std::tuple<T...> Tuple;
-   typedef typename std::tuple_element<0, Tuple>::type HeadType;
+    typedef std::tuple<T...> Tuple;
+    typedef typename std::tuple_element<0, Tuple>::type HeadType;
+    enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
 
   public:
     USING(tuple_array, Tuple);
@@ -172,11 +175,31 @@ class tuple_array : public std::tuple<T...>
     {
       return TupleAt<Tuple>::get(*this, index);
     }
+    HeadType & at(size_t index) 
+    {
+      if(index >= TUPLE_SIZE)
+        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+      else
+        return TupleAt<Tuple>::get(*this, index);
+    }
     const HeadType & operator [] (size_t index) const
     {
       return TupleAt<Tuple>::get_const(*this, index);
     }
+    const HeadType & at(size_t index) const 
+    {
+      if(index >= TUPLE_SIZE)
+        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
+      else
+        return TupleAt<Tuple>::get_const(*this, index);
+    }
 };
+
+template <typename... T>
+tuple_array<T...> make_tuple_array(T... args)
+{
+  return { std::forward<T&&>(args)... };
+}
 
 int main(void)
 {
@@ -184,7 +207,8 @@ int main(void)
   tuple_iterator<decltype(tuple)> titer(tuple);
   std::copy(begin(tuple), end(tuple), std::ostream_iterator<int>(std::cout, " "));
   std::cout << std::endl;
-  tuple_array<int, int, int> ta{4, 2, 1};
+  auto ta = make_tuple_array(4, 2, 1);
+  std::cout << "sizeof(ta) = " << sizeof(ta) << std::endl;
   std::cout << ta[0] << std::endl;
   std::cout << ta[1] << std::endl;
   std::sort(begin(ta), end(ta));
