@@ -25,6 +25,7 @@ template <typename Tuple>
 class TupleAt<Tuple, 0>
 {
     typedef typename std::tuple_element<0, Tuple>::type T;
+
   public:
 
     static T & get(Tuple & tuple, size_t index)
@@ -46,93 +47,92 @@ class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
     enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
    
     Tuple * tuple;
-    int index;
+    int current_;
+    int last_;
+    T * ref_;
+
+    T * update_ref()
+    {
+      if(current_ != last_)
+      {
+        ref_ = & TupleAt<Tuple>::get(*tuple, current_);
+        last_ = current_;
+      }
+      return ref_;
+    }
 
  public:
   
     typedef int difference_type; 
 
     explicit tuple_iterator(Tuple & t, int i = TUPLE_SIZE) 
-      : tuple(&t), index(i) 
+      : tuple(&t), 
+        current_(i), 
+        last_(i-1), 
+        ref_(&TupleAt<Tuple>::get(*tuple, last_)) 
     {}
-    T & operator *()
-    {
-      return TupleAt<Tuple>::get(*tuple, index);
+    T & operator *() {
+      return *update_ref();
     }
-    T * operator ->()
-    {
-      return & TupleAt<Tuple>::get(*tuple, index);
+    T * operator ->() {
+      return update_ref();
     }
-    T & operator [] (int offset)
-    {
-      return TupleAt<Tuple>::get(*tuple, index+offset);
+    T & operator [] (int offset) {
+      return TupleAt<Tuple>::get(*tuple, current_+offset);
     }
-    tuple_iterator & operator ++ () 
-    {
-      if(index < TUPLE_SIZE)
-        ++index;
+    tuple_iterator & operator ++ () {
+      if(current_ < TUPLE_SIZE)
+        ++current_;
       return *this;
     }
-    tuple_iterator operator ++ (int) 
-    {
+    tuple_iterator operator ++ (int) {
       tuple_iterator temp(*this);
       ++(*this);
       return temp;
     }
-    tuple_iterator & operator -- () 
-    {
-      if(index >= 0)
-        --index;
+    tuple_iterator & operator -- () {
+      if(current_ >= 0)
+        --current_;
       return *this;
     }
-    tuple_iterator operator -- (int) 
-    {
+    tuple_iterator operator -- (int) {
       tuple_iterator temp(*this);
       --(*this);
       return temp;
     }
-    tuple_iterator operator - (int i)
-    {
-      tuple_iterator temp(*tuple, index-i);
+    tuple_iterator operator - (int i) const {
+      tuple_iterator temp(*tuple, current_-i);
       return temp;
     }
-    tuple_iterator & operator -= (int i)
-    {
-      index-=i;
+    tuple_iterator & operator -= (int i) {
+      current_-=i;
       return *this;
     }
-    tuple_iterator operator + (int i)
-    {
-      tuple_iterator temp(*tuple, index+i);
+    tuple_iterator operator + (int i) const {
+      tuple_iterator temp(*tuple, current_+i);
       return temp;
     }
-    tuple_iterator & operator += (int i)
-    {
-      index+=i;
+    tuple_iterator & operator += (int i) {
+      current_+=i;
       return *this;
     }
-    difference_type operator - (const tuple_iterator & ti)
-    {
-      return index - ti.index;
+    difference_type operator - (const tuple_iterator & ti) const {
+      return current_ - ti.current_;
     }
-    bool operator < (const tuple_iterator &ti)
-    {
-      return index < ti.index;
+    bool operator < (const tuple_iterator &ti) const {
+      return current_ < ti.current_;
     }
-    bool operator > (const tuple_iterator &ti)
-    {
-      return index > ti.index;
+    bool operator > (const tuple_iterator &ti) const {
+      return current_ > ti.current_;
     }
-    bool operator <= (const tuple_iterator &ti)
-    {
-      return index <= ti.index;
+    bool operator <= (const tuple_iterator &ti) const {
+      return current_ <= ti.current_;
     }
-    bool operator >= (const tuple_iterator &ti)
-    {
-      return index >= ti.index;
+    bool operator >= (const tuple_iterator &ti) const {
+      return current_ >= ti.current_;
     }
     bool operator == (tuple_iterator const & ti) const {
-      return (tuple == ti.tuple) && (index == ti.index);
+      return (tuple == ti.tuple) && (current_ == ti.current_);
     }
     bool operator != (tuple_iterator const & ti) const {
       return !(*this == ti);
@@ -171,7 +171,7 @@ tuple_iterator<std::tuple<Args...>> end(std::tuple<Args...> &t)
                 std::is_constructible<Base, Args...>::value  \
              >::type>                                        \
     Dervied(Args &&...args)                                  \
-        : Base(std::forward<Args>(args)...) { }              \
+        : Base(std::forward<Args>(args)...)                  \
 
 template <typename... T>
 class tuple_array : public std::tuple<T...>
@@ -180,30 +180,33 @@ class tuple_array : public std::tuple<T...>
     typedef typename std::tuple_element<0, Tuple>::type HeadType;
     enum { TUPLE_SIZE = std::tuple_size<Tuple>::value };
 
+    mutable HeadType * ref_;
+    mutable size_t last_;
+
   public:
-    USING(tuple_array, Tuple);
+    USING(tuple_array, Tuple)
+    {
+      ref_ = & TupleAt<Tuple>::get(*this, TUPLE_SIZE-1);
+      last_ = TUPLE_SIZE-1;
+    }
 
     HeadType & operator [] (size_t index) 
     {
-      return TupleAt<Tuple>::get(*this, index);
-    }
-    HeadType & at(size_t index) 
-    {
-      if(index >= TUPLE_SIZE)
-        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
-      else
-        return TupleAt<Tuple>::get(*this, index);
+      if(last_ != index)
+      {
+        ref_ = & TupleAt<Tuple>::get(*this, index);
+        last_ = index;
+      }
+      return *ref_;
     }
     const HeadType & operator [] (size_t index) const
     {
-      return TupleAt<Tuple>::get_const(*this, index);
-    }
-    const HeadType & at(size_t index) const 
-    {
-      if(index >= TUPLE_SIZE)
-        throw std::out_of_range("Tuple iterator dereferenced out of valid range."); 
-      else
-        return TupleAt<Tuple>::get_const(*this, index);
+      if(last_ != index)
+      {
+        ref_ = & TupleAt<Tuple>::get_const(*this, index);
+        last_ = index;
+      }
+      return *ref_;
     }
 };
 
