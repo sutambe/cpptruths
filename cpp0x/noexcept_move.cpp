@@ -67,15 +67,15 @@ struct test : base
     swap(m, t2.m);
   }
 
-  test(test && t) // depends on whether member's move-ctor throws or not.
+  //test(test && t) // depends on whether member's move-ctor throws or not.
   //  noexcept(std::is_nothrow_constructible<nm::test>::value &&
   //           noexcept(t.swap(t))) 
-    noexcept
-  { swap(t); } 
+  //  noexcept
+  //{ swap(t); } 
   // test (test && t) = default;
-  /*
-  test(test && t)  // = default;
-    noexcept(is_noexcept_movable_all<base, std::string, std::complex<double>, std::map<int, std::string>>::value)
+  
+  test(test && t) = default;
+  /*  noexcept(is_noexcept_movable_all<base, std::string, std::complex<double>, std::map<int, std::string>>::value)
     : str(std::move(t.str)), cd(std::move(t.cd)), m(std::move(t.m))
   {
     printf("%s\n", __PRETTY_FUNCTION__);
@@ -111,7 +111,16 @@ template <>
 
 int main(void)
 {
-  
+  if(std::is_nothrow_move_constructible<std::string>::value)
+    printf("std::string move constructor does not throw.\n");
+  else
+    printf("std::string move constructor throws.\n");
+    
+  if(std::is_nothrow_move_constructible<std::vector<int>>::value)
+    printf("std::vector<int> move constructor does not throw.\n");
+  else
+    printf("std::vector<int> move constructor throws.\n");
+
   nm::test t;
   std::vector<nm::test> v{5}; // uses initializer_list only if nm::test has a int constructor, otherwise creates 5 nm::test objects.
   v.reserve(20);
