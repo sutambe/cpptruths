@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <ctype.h>
 
 #ifdef WIN32
 typedef unsigned char uint8_t;
@@ -40,14 +42,16 @@ class Simple
 public:
 
   // generated from c++/cli_hdr/struct_post.erb
+  /*
   Simple (void);
   Simple (const uint8_t& o,
           const int32_t& l,
           const print_string& s,
+          const std::vector<print_string> & v,
           const double& d,
           const bool& b,
           const char& c)
-    : o_(o), l_(l), s_(s), d_(d), b_(b), c_(c)
+    : o_(o), l_(l), s_(s), v_(v), d_(d), b_(b), c_(c)
   { 
     printf("regular parameter constructor\n");
   }
@@ -55,22 +59,41 @@ public:
   Simple (uint8_t&& o,
           int32_t&& l,
           print_string&& s,
+          const std::vector<print_string> && v,
           double&& d,
           bool&& b,
           char&& c)
-    : o_(o), l_(l), s_(std::move(s)), d_(d), b_(b), c_(c)
+    : o_(o), l_(l), s_(std::move(s)), v_(std::move(v)), d_(d), b_(b), c_(c)
   { 
     printf("rvalue parameter constructor\n");
+  }
+*/
+  template <typename Title, typename Authors>
+  //template <typename Title>
+  Simple (uint8_t o,
+          int32_t l,
+          Title && s,
+          Authors && v,
+          double d,
+          bool b,
+          char c)
+    : o_(o), l_(l), 
+      s_(std::forward<Title>(s)), 
+      v_(std::forward<Authors>(v)), 
+      d_(d), b_(b), c_(c)
+  { 
+    printf("perfect forwarding rvalue-ref parameter constructor\n");
   }
 
 /*  
   Simple (uint8_t o,
           int32_t l,
           print_string s,
+          std::vector<print_string> v,
           double d,
           bool b,
           char c)
-    : o_(o), l_(l), s_(std::move(s)), d_(d), b_(b), c_(c)
+    : o_(o), l_(l), s_(std::move(s)), v_(std::move(v)), d_(d), b_(b), c_(c)
   { 
     printf("pass-by-value parameter constructor\n");
   }
@@ -114,21 +137,29 @@ private:
   uint8_t o_;
   int32_t l_;
   print_string s_;
+  std::vector<print_string> v_;
   double d_;
   bool b_;
   char c_;
 }; // Simple
 
+print_string & toUpper(print_string & s)
+{
+    std::transform(s.begin(), s.end(), s.begin(), toupper);
+    return s;
+}
+
 int main(void)
 {
-  //Simple s1(10, 20, "Test", 30.40, true, 'Z');
-  //std::string name = "Test";
-  //Simple s2(10, 20, name, 30.40, true, 'Z');
+  print_string test("test");
+  Simple s1(10, 20, toUpper(test), { "A", "B" }, 30.40, true, 'Z');
+  //Simple s1(10, 20, toUpper(test), 30.40, true, 'Z');
+  //print_string name = "Test";
+  //Simple s2(10, 20, name, { "Z", "Y" }, 30.40, true, 'Z');
   
-  uint8_t value = 200;
-  Simple s3(value, 20, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_", 30.40, true, 'Z'); // large string to ensure string is allocated.
-  print_string ps[5] {"A", "B", "C", "D", "E" };
-  std::remove(std::begin(ps), std::end(ps), "B");
-
+  //uint8_t value = 200;
+  //Simple s3(value, 20, "ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_ABCDEFGHIJKLMNOPQRSTUVWXYZ_", 30.40, true, 'Z'); // large string to ensure string is allocated.
+  //print_string ps[5] {"A", "B", "C", "D", "E" };
+  //std::remove(std::begin(ps), std::end(ps), "B");
 }
 
