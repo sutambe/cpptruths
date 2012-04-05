@@ -7,8 +7,11 @@
 #include <map>
 #include <tuple>
 
+template <typename... T>
+struct is_nothrow_swappable_all;
+
 template<typename... T>
-struct is_noexcept_swappable_all
+struct is_nothrow_swappable_all<std::tuple<T...>>
 {
   typedef std::tuple<T...> Tuple;
   static Tuple *t; 
@@ -17,7 +20,27 @@ struct is_noexcept_swappable_all
 };
 
 template<typename... T>
-struct is_noexcept_movable_all
+struct is_nothrow_swappable_all : is_nothrow_swappable_all<std::tuple<T...>> 
+{};
+
+struct check_swap
+{
+  template <typename... T>
+  check_swap(T...) noexcept(is_nothrow_swappable_all<T...>::value);
+  ~check_swap() noexcept;
+};
+
+#define RETURNS(...)                                                 \
+   noexcept(noexcept(decltype(__VA_ARGS__)(std::move(__VA_ARGS__)))) \
+ -> decltype(__VA_ARGS__)                                            \
+ { return (__VA_ARGS__); }                                           \
+ typedef int RETURNS_CAT(RETURNS_, __LINE__)
+
+ #define RETURNS_CAT_0(x, y) x ## y
+ #define RETURNS_CAT(x, y) RETURNS_CAT_0(x,y)
+
+template<typename... T>
+struct is_nothrow_movable_all
 {
   typedef std::tuple<T...> Tuple;
   enum { value = noexcept(Tuple(std::declval<Tuple>())) };
@@ -56,15 +79,17 @@ struct test : base
                                               std::declval<std::map<int, std::string> &>())))
   */
   //void swap (test & t2) noexcept
-  void swap (test & t2) 
-    noexcept(is_noexcept_swappable_all<base, std::complex<double>, std::string, std::map<int, std::string> >::value)
+  friend auto swap (test & t1, test & t2) 
+    noexcept(is_nothrow_swappable_all<base, std::complex<double>, std::string, std::map<int, std::string> >::value) -> void
+//    RETURNS(swap(t1.str, t2.str), swap(t1.cd, t2.cd), swap(t1.m, t2.m))
+//
   {
     printf("%s\n", __PRETTY_FUNCTION__);
     using std::swap;
-    base::swap(*this);
-    swap(str, t2.str);
-    swap(cd, t2.cd);
-    swap(m, t2.m);
+    swap(static_cast<base &>(t1), static_cast<base &>(t2));
+    swap(t1.str, t2.str);
+    swap(t1.cd, t2.cd);
+    swap(t1.m, t2.m);
   }
 
   //test(test && t) // depends on whether member's move-ctor throws or not.
@@ -75,7 +100,7 @@ struct test : base
   // test (test && t) = default;
   
   test(test && t) = default;
-  /*  noexcept(is_noexcept_movable_all<base, std::string, std::complex<double>, std::map<int, std::string>>::value)
+  /*  noexcept(is_nothrow_movable_all<base, std::string, std::complex<double>, std::map<int, std::string>>::value)
     : str(std::move(t.str)), cd(std::move(t.cd)), m(std::move(t.m))
   {
     printf("%s\n", __PRETTY_FUNCTION__);
@@ -93,10 +118,6 @@ struct test : base
   //~test () noexcept {}
 };
 
-void swap(test & t1, test &t2) noexcept(noexcept(t1.swap(t2)))
-{
-  t1.swap(t2);
-}
 
 } // namespce nm
 /*
