@@ -123,37 +123,37 @@ void Replier<TReq, TRep>::send_reply(URep rep,
 template <typename TReq, typename TRep>
 class Requester
 {
-	void send_request_impl(const char *)
-	{
-		printf("send_request_impl(const char *)\n");
-	}
+    static void send_request_impl(const char *)
+    {
+      printf("send_request_impl(const char *)\n");
+    }
 
-	void send_request_impl(const std::string &)
-	{
-		printf("send_request_impl(const std::string &)\n");
-	}
+    static void send_request_impl(const std::string &)
+    {
+      printf("send_request_impl(const std::string &)\n");
+    }
 
-	void send_request_impl(WriteSample<char *> &)
-	{
-		printf("send_request_impl(WriteSample<char *> &)\n");
-	}
+    static void send_request_impl(WriteSample<char *> &)
+    {
+      printf("send_request_impl(WriteSample<char *> &)\n");
+    }
 
-	void send_request_impl(WriteSample<const char *> &)
-	{
-		printf("send_request_impl(WriteSample<char *> &)\n");
-	}
-
-    template <class T>
-	void send_request_impl(WriteSample<T> &)
-	{
-		printf("send_request_impl(WriteSample<T> &)\n");
-	}
+    static void send_request_impl(WriteSample<const char *> &)
+    {
+      printf("send_request_impl(WriteSample<char *> &)\n");
+    }
 
     template <class T>
-	void send_request_impl(const T &)
-	{
-		printf("send_request_impl(const T &)\n");
-	}
+    static void send_request_impl(WriteSample<T> &)
+    {
+      printf("send_request_impl(WriteSample<T> &)\n");
+    }
+
+    template <class T>
+    static void send_request_impl(const T &)
+    {
+      printf("send_request_impl(const T &)\n");
+    }
 
 public:
 
@@ -173,22 +173,22 @@ public:
     send_request(WriteSample<UReq> & req){}
 */
 
-	template <typename UReq>
+    template <typename UReq>
     void send_request_fixed(UReq ureq)
-	{
+    {
         printf("type = %s\n", typeid(UReq).name());
-		send_request_impl(ureq);
-	}
+	send_request_impl(ureq);
+    }
 };
 
 int main(void)
 {
     typedef int Foo;
     
-	Replier<char *, char *> r1;
+    Replier<char *, char *> r1;
     r1.send_reply("RTI", 999);
 
-	Replier<Foo, Foo> r2;
+    Replier<Foo, Foo> r2;
     r2.send_reply(999, 999);
     
     Requester<char *, char *> requester1;
@@ -196,6 +196,8 @@ int main(void)
     
     const WriteSample<char *> ws;
     requester1.send_request_fixed(ws);
+    std::string str = "RTI";
+    requester1.send_request_fixed(str);
     
     Requester<Foo, Foo> requester2;
     requester2.send_request_fixed(999);
