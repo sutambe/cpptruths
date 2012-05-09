@@ -1,5 +1,10 @@
 #include <cstdio>
 #include <string>
+#include <typeinfo>
+
+template<bool> struct CompileTimeAssert;   
+template<> struct CompileTimeAssert<true>{};
+#define STATIC_ASSERT(e) (CompileTimeAssert <(e)>())
 
 struct true_type {  
     enum { value = 1 }; 
@@ -74,6 +79,10 @@ struct disable_if<true, T> { };
 
 typedef int RequestHandle;
 
+template <typename T>
+class WriteSample
+{};
+
 template <typename TReq, typename TRep>
 class Replier
 {
@@ -114,64 +123,81 @@ void Replier<TReq, TRep>::send_reply(URep rep,
 template <typename TReq, typename TRep>
 class Requester
 {
+	void send_request_impl(const char *)
+	{
+		printf("send_request_impl(const char *)\n");
+	}
+
+	void send_request_impl(const std::string &)
+	{
+		printf("send_request_impl(const std::string &)\n");
+	}
+
+	void send_request_impl(WriteSample<char *> &)
+	{
+		printf("send_request_impl(WriteSample<char *> &)\n");
+	}
+
+	void send_request_impl(WriteSample<const char *> &)
+	{
+		printf("send_request_impl(WriteSample<char *> &)\n");
+	}
+
+    template <class T>
+	void send_request_impl(WriteSample<T> &)
+	{
+		printf("send_request_impl(WriteSample<T> &)\n");
+	}
+
+    template <class T>
+	void send_request_impl(const T &)
+	{
+		printf("send_request_impl(const T &)\n");
+	}
+
 public:
 
+/*
     void send_request(const TReq & req);
 
     template <typename UReq>
     typename enable_if<are_both_strings<TReq, UReq>::value>::type
-    send_request(const UReq & req);
+    send_request(const UReq & req) {}
 
     template <typename UReq>
     typename enable_if<are_both_char_pointers<TReq, UReq>::value>::type
-    send_request(WriteSample<UReq> & req);
+    send_request(WriteSample<UReq> & req) {}
 
     template <typename UReq>
     typename enable_if<are_both_same_and_not_char_pointers<TReq, UReq>::value>::type
-    send_request(WriteSample<UReq> & req);
-};
-/*
-template <typename TReq, typename TRep>
-void Requester<TReq, TRep>::send_request(const TReq & req)
-{
-
-}
-
-template <typename TReq, typename TRep>
-template <typename UReq>
-typename enable_if<are_both_strings<TReq, UReq>::value, void>::type
-Requester<TReq, TRep>::send_request(const UReq & req)
-{
-
-}
-
-template <typename TReq, typename TRep>
-template <typename UReq>
-typename enable_if<are_both_char_pointers<TReq, UReq>::value, void>::type
-Requester<TReq, TRep>::send_request(WriteSample<UReq> & req)
-{
-
-}
-
-template <typename TReq, typename TRep>
-template <typename UReq>
-typename enable_if<are_both_same_and_not_char_pointers<TReq, UReq>::value, void>::type
-Requester<TReq, TRep>::send_request(WriteSample<UReq> & req)
-{
-
-}
+    send_request(WriteSample<UReq> & req){}
 */
+
+	template <typename UReq>
+    void send_request_fixed(UReq ureq)
+	{
+        printf("type = %s\n", typeid(UReq).name());
+		send_request_impl(ureq);
+	}
+};
+
 int main(void)
 {
+    typedef int Foo;
+    
 	Replier<char *, char *> r1;
     r1.send_reply("RTI", 999);
 
-	Replier<int, int> r2;
+	Replier<Foo, Foo> r2;
     r2.send_reply(999, 999);
+    
+    Requester<char *, char *> requester1;
+    requester1.send_request_fixed("RTI");
+    
+    const WriteSample<char *> ws;
+    requester1.send_request_fixed(ws);
+    
+    Requester<Foo, Foo> requester2;
+    requester2.send_request_fixed(999);
 }
-/*
-foo   foo     OK            OK
-foo   char*   LONG ERRORS   LESS ERRORS
-char* foo     LONG ERRORS   LONG ERRORS
-char* char*   OK            OK
-*/
+
