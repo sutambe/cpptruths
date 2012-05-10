@@ -249,7 +249,7 @@ int main(void)
     Requester<Foo, Foo> requester2;
     const Foo f;
     requester2.send_request_fixed(f);
-    WriteSample<int> foo_ws;
+    WriteSample<Foo> foo_ws;
     requester2.send_request_fixed(foo_ws);
 }
 
