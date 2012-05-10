@@ -6,9 +6,9 @@
 #include <cxxabi.h>
 #endif
 
-template<bool> struct CompileTimeAssert;   
-template<> struct CompileTimeAssert<true>{};
-#define STATIC_ASSERT(e) (CompileTimeAssert <(e)>())
+template<bool> struct Write_Sample_Types_Match_Assertion_Failure;   
+template<>     struct Write_Sample_Types_Match_Assertion_Failure<true>{};
+#define MATCH_TYPES_STATIC_ASSERT(e) (Write_Sample_Types_Match_Assertion_Failure <(e)>())
 
 struct true_type {  
     enum { value = 1 }; 
@@ -207,6 +207,7 @@ public:
     template <typename UReq>
     void send_request_fixed(WriteSample<UReq> & ureq)
     {
+      MATCH_TYPES_STATIC_ASSERT((is_same<TReq, UReq>::value));
 #ifdef __GNUG__
       int s;
       printf("WriteSample type = %s\n", abi::__cxa_demangle(typeid(WriteSample<UReq> &).name(), 0, 0, &s));
@@ -243,12 +244,12 @@ int main(void)
     WriteSample<char *> ws;
     requester1.send_request_fixed(ws);
     std::string str = "RTI";
-    requester1.send_request_fixed(str);
+    requester1.send_request_fixed(str.c_str());
     
     Requester<Foo, Foo> requester2;
     const Foo f;
     requester2.send_request_fixed(f);
-    WriteSample<Foo> foo_ws;
+    WriteSample<int> foo_ws;
     requester2.send_request_fixed(foo_ws);
 }
 
