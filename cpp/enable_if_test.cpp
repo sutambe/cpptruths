@@ -2,6 +2,10 @@
 #include <string>
 #include <typeinfo>
 
+#ifdef __GNUG__
+#include <cxxabi.h>
+#endif
+
 template<bool> struct CompileTimeAssert;   
 template<> struct CompileTimeAssert<true>{};
 #define STATIC_ASSERT(e) (CompileTimeAssert <(e)>())
@@ -191,17 +195,29 @@ public:
     template <typename UReq>
     void send_request_fixed(const UReq & ureq)
     {
-        printf("type = %s\n", typeid(UReq &).name());
-        send_request_impl(ureq);
+#ifdef __GNUG__
+      int s;
+      printf("type = %s\n", abi::__cxa_demangle(typeid(const UReq &).name(), 0, 0, &s));
+#else
+      printf("type = %s\n", typeid(const UReq &).name());
+#endif
+      send_request_impl(ureq);
     }
 
     template <typename UReq>
     void send_request_fixed(WriteSample<UReq> & ureq)
     {
-        printf("WriteSample type = %s\n", typeid(WriteSample<UReq> &).name());
-        //send_request_impl(const_cast<typedef remove_const<UReq>::type &>(ureq));
-        send_request_impl(ureq);
+#ifdef __GNUG__
+      int s;
+      printf("WriteSample type = %s\n", abi::__cxa_demangle(typeid(WriteSample<UReq> &).name(), 0, 0, &s));
+#else
+      printf("WriteSample type = %s\n", typeid(WriteSample<UReq> &).name());
+#endif
+      send_request_impl(ureq);
     }
+
+    template <typename UReq>
+    void send_request_fixed(const WriteSample<UReq> & ureq);
 };
 
 struct Foo
@@ -224,7 +240,7 @@ int main(void)
     Requester<char *, char *> requester1;
     requester1.send_request_fixed("RTI");
     
-    const WriteSample<char *> ws;
+    WriteSample<char *> ws;
     requester1.send_request_fixed(ws);
     std::string str = "RTI";
     requester1.send_request_fixed(str);
