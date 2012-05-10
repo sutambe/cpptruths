@@ -77,11 +77,26 @@ struct disable_if
 template <typename T>
 struct disable_if<true, T> { };
 
+template <class T>
+struct remove_const;
+
+template <class T>
+struct remove_const<const T>
+{
+    typedef T type;
+};
+
 typedef int RequestHandle;
 
 template <typename T>
-class WriteSample
-{};
+struct WriteSample
+{
+    WriteSample() {}
+    WriteSample(const WriteSample &) 
+    {
+        printf("************** WriteSample Copied ****************\n");
+    }
+};
 
 template <typename TReq, typename TRep>
 class Replier
@@ -90,8 +105,8 @@ public:
 
 	template <typename URep>
     void send_reply(const URep & rep, 
-                    const RequestHandle & handle,
-                    typename disable_if<is_char_pointer<URep>::value>::type * = 0);
+        const RequestHandle & handle,
+        typename disable_if<is_char_pointer<URep>::value>::type * = 0);
 	
     // VC++ does not like a boolean expression in enable_if.
     // That's why the boolean expression is refactored in are_both_char_pointers.
@@ -114,8 +129,8 @@ void Replier<TReq, TRep>::send_reply(const URep & rep,
 template <typename TReq, typename TRep>
 template <typename URep>
 void Replier<TReq, TRep>::send_reply(URep rep, 
-                                     const RequestHandle & handle,
-                                     typename enable_if<are_both_char_pointers<TRep, URep>::value>::type *)
+    const RequestHandle & handle,
+    typename enable_if<are_both_char_pointers<TRep, URep>::value>::type *)
 {
     printf("URep is a pointer.\n");
 }
@@ -174,17 +189,32 @@ public:
 */
 
     template <typename UReq>
-    void send_request_fixed(UReq ureq)
+    void send_request_fixed(const UReq & ureq)
     {
-        printf("type = %s\n", typeid(UReq).name());
-	send_request_impl(ureq);
+        printf("type = %s\n", typeid(UReq &).name());
+        send_request_impl(ureq);
+    }
+
+    template <typename UReq>
+    void send_request_fixed(WriteSample<UReq> & ureq)
+    {
+        printf("WriteSample type = %s\n", typeid(WriteSample<UReq> &).name());
+        //send_request_impl(const_cast<typedef remove_const<UReq>::type &>(ureq));
+        send_request_impl(ureq);
+    }
+};
+
+struct Foo
+{
+    Foo() {}
+    Foo(const Foo &)
+    {
+        printf("Foo copied\n");
     }
 };
 
 int main(void)
 {
-    typedef int Foo;
-    
     Replier<char *, char *> r1;
     r1.send_reply("RTI", 999);
 
@@ -200,6 +230,9 @@ int main(void)
     requester1.send_request_fixed(str);
     
     Requester<Foo, Foo> requester2;
-    requester2.send_request_fixed(999);
+    const Foo f;
+    requester2.send_request_fixed(f);
+    WriteSample<Foo> foo_ws;
+    requester2.send_request_fixed(foo_ws);
 }
 
