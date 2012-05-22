@@ -4,6 +4,11 @@
 #include <iterator>
 #include <stdlib.h>
 
+int gen_random()
+{
+  return rand() % 10000;
+}
+
 template <class FWIter>
 void print(FWIter begin, FWIter end)
 {
@@ -16,14 +21,14 @@ void list_insert_sort(size_t N)
 {
   typedef std::list<int> T;
   T list;
-  list.push_back(rand() % 50);
+  list.push_back(gen_random());
   size_t count = 1;
 
   //print(list.begin(), list.end());
 
   for(size_t i = 1;i < N;++i)
   {
-    int value = rand() % 50;
+    int value = gen_random();
 
     T::iterator iter = list.begin();
     for(size_t pos = 0; (*iter < value) && (pos < count); ++iter, ++pos);
@@ -39,25 +44,27 @@ void list_insert_sort(size_t N)
 void vector_insert_sort(size_t N)
 {
   typedef std::vector<int> T;
-  T vector(N);
-  *(vector.begin()) = rand() % 50;
+  T vector;
+  vector.reserve(N);
+  vector.push_back(gen_random());
   size_t count = 1;
 
   //print(vector.begin(), vector.end());
 
   for(size_t i = 1;i < N;++i)
   {
-    int value = rand() % 50;
+    int value = gen_random();
 
     T::iterator iter = vector.begin();
     for(size_t pos = 0; (*iter < value) && (pos < count); ++iter, ++pos);
     T::iterator location = iter;
 
     if(iter == vector.end())
-      *iter = value;
+      vector.push_back(value);
     else
     {
-      iter = vector.end();
+      vector.resize(vector.size()+1);
+      iter = vector.end()-1;
       do
       {
         T::iterator next = iter;
