@@ -4,6 +4,8 @@
 #include <iterator>
 #include <string>
 #include <stdlib.h>
+#include <limits>
+#include <stdexcept>
 #include <ctime>
 
 int gen_random()
@@ -14,8 +16,8 @@ int gen_random()
 template <class FWIter>
 void print(FWIter begin, FWIter end)
 {
-  std::copy(begin, end, std::ostream_iterator<typename FWIter::value_type>(std::cout, " "));
-  std::cout << std::endl;
+  //std::copy(begin, end, std::ostream_iterator<typename FWIter::value_type>(std::cout, " "));
+  //std::cout << std::endl;
 }
 
 void list_insert_sort(size_t N)

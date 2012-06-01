@@ -34,7 +34,7 @@ int main(void)
   Foo f;
   printf("%p %p\n", f.data.first(), f.data.second());
 
-  boost::compressed_pair<E1, E2> cpair;
+  boost::compressed_pair<E1, E1> cpair;
   printf("boost compressed_pair %p %p\n", &cpair.first(), &cpair.second());
 
   return 0;

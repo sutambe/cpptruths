@@ -21,7 +21,7 @@ struct dominant : public virtual base {
   int number() { return 5; }
 };
 
-struct derived : public weak, public dominant 
+struct derived : public virtual weak, public virtual dominant 
 {
   using weak::number;
   /*int number() {
