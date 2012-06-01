@@ -11,7 +11,8 @@ unique_ptr<int> func(int i)
 
 int main(void)
 {
-  unique_ptr<int> up = func(10);
+  unique_ptr<int> up = move(func(10));
+  //unique_ptr<int> up = func(10);
   unique_ptr<int> up2;
   up2 = move(up);
 

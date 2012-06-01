@@ -218,7 +218,7 @@ int main ()
   //MovableResource<int> mr2(source());
   MovableResource<int> mr3; //(mr);
   mr3 = source();
-  //sink(move(mr3));
+  sink(move(mr3));
   //mr2 = mr;
 #endif  
   std::cout << "All temporaries should be gone by now" << std::endl;
