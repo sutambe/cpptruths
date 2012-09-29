@@ -276,6 +276,8 @@ void book_perf(char * argv[])
   const unsigned N = atoi(argv[1]);
   v.reserve(N);
   
+  Book bb("Book", { "Author1", "Author2" }, "Publisher", create_map());
+
   const char book_name[10] = "book_name";
   const char publisher[10]= "publisher";
   auto t0 = Clock::now();
