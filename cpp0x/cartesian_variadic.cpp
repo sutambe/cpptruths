@@ -56,9 +56,9 @@ struct SizeOf<type_list<Pairs...>>
 
 int main()
 {
-  int s;
   typedef cross_product<int, float, short>::type result;
 #ifdef GCC
+  int s;
   std::cout << abi::__cxa_demangle(typeid(result).name(), 0, 0, &s) << std::endl;
 #endif
   std::cout << SizeOf<result>::value << std::endl;

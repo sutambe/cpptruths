@@ -40,7 +40,8 @@ public:
 
 private:
   template <std::size_t... Indices>
-  static void forward0(index_tuple<Indices...>, std::tuple<Args...> & args)
+  static void forward0(index_tuple<Indices...>, 
+                       std::tuple<Args...> & args)
   {
     some_func(std::forward<Args>(std::get<Indices>(args))...);
   }
@@ -49,7 +50,9 @@ private:
 };
 
 template <std::size_t... Indices, class... Args, class Ret>
-Ret forward_impl(index_tuple<Indices...>, std::tuple<Args...> tuple, Ret (*fptr) (Args...))
+Ret forward_impl(index_tuple<Indices...>, 
+                 std::tuple<Args...> tuple, 
+                 Ret (*fptr) (Args...))
 {
   return fptr(std::forward<Args>(std::get<Indices>(tuple))...);
 }
@@ -58,7 +61,9 @@ template<class... Args, class Ret>
 Ret forward(std::tuple<Args...> && tuple, Ret (*fptr) (Args...))
 {
     typedef typename make_indices<Args...>::type Indices;
-    return forward_impl(Indices(), std::forward<std::tuple<Args...>>(tuple), fptr);
+    return forward_impl(Indices(), 
+                        std::forward<std::tuple<Args...>>(tuple), 
+                        fptr);
 }
 
 int myfunc(int i, bool, double)
