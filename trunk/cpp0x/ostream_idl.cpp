@@ -50,12 +50,13 @@ operator << (std::ostream & o, const std::vector<T> & v)
 }
 
 namespace track {
-
+#ifdef USER_DEF
 std::ostream & operator << (std::ostream & o, const Radar & r)
 {
   o << "This is user-defined operator << \n";
   return o;
 }
+#endif // USER_DEF
 }
 
 namespace A
@@ -117,6 +118,15 @@ namespace B
   }
 */
 };
+
+#ifdef USER_DEF
+std::ostream & operator << (std::ostream & o, std::vector<uint32_t> const &v)
+{
+  o << "user-defined sequence printer: ";
+  std::copy(v.begin(), v.end(), std::ostream_iterator<uint32_t>(o, " "));
+  return o;
+}
+#endif // USER_DEF
 
 int main(int, char*[])
 {
