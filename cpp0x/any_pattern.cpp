@@ -1,3 +1,4 @@
+#include <sys/time.h>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
 #include <type_traits>
@@ -172,9 +173,9 @@ public:
   Matcher(T &t) : t_(t) {}
 
   template <class... Fs>
-  void operator()(Fs&&... x) const 
+  void operator()(Fs&&... f) const 
   {
-    return overload_set<Fs...>(std::forward<Fs>(x)...).type_switch(t_);
+    overload_set<Fs...>(std::forward<Fs>(f)...).type_switch(t_);
   }
 };
 
@@ -233,10 +234,12 @@ void test_variant()
 
 struct Expr { 
   virtual ~Expr() {}
+  virtual int exec() const = 0;
 };
 
 struct Value : Expr {
   Value(int v) : value(v) {}
+  int exec() const override { return value; }
   int value;
 };
 
@@ -244,24 +247,36 @@ struct Plus : Expr {
   Plus(const Expr& e1, const Expr& e2) 
     : e1(e1), e2(e2) 
   {}
+  int exec() const override {
+    return e1.exec() + e2.exec();
+  }
   const Expr& e1;
   const Expr& e2;
 };
 
 struct Minus : Expr {
   Minus(const Expr& e1, const Expr& e2) : e1(e1), e2(e2) {}
+  int exec() const override {
+    return e1.exec() - e2.exec();
+  }
   const Expr& e1;
   const Expr& e2;
 };
 
 struct Times : Expr {
   Times(const Expr& e1, const Expr& e2) : e1(e1), e2(e2) {}
+  int exec() const override {
+    return e1.exec() * e2.exec();
+  }
   const Expr& e1;
   const Expr& e2;
 };
 
 struct Divide : Expr {
   Divide(const Expr& e1, const Expr& e2) : e1(e1), e2(e2) {}
+  int exec() const override {
+    return e1.exec() / e2.exec();
+  }
   const Expr& e1;
   const Expr& e2;
 };
@@ -279,18 +294,43 @@ int eval(const Expr& expr)
   return val;
 }
 
-void test_expr()
+int operator - (const timeval & end, const timeval & start)
 {
-  std::cout << "eval = " 
-            << eval(Times(Plus(Value(10), Value(20)), Plus(Value(5), Value(10))))
-            << std::endl;
+  return (end.tv_sec*1000+end.tv_usec/1000)-(start.tv_sec*1000+start.tv_usec/1000);
 }
 
-int main(void)
+void test_expr(int iter)
+{
+  timeval start, stop;
+  gettimeofday(&start, nullptr);
+  for(int i=0;i < iter;++i)
+  {
+    eval(Times(Plus(Value(10), Value(20)), Plus(Value(5), Value(10))));
+    //std::cout << "eval = " 
+    //        << eval(Times(Plus(Value(10), Value(20)), Plus(Value(5), Value(10))))
+    //        << std::endl;
+  }
+  gettimeofday(&stop, nullptr);
+  std::cout << "Diff = " << stop - start << std::endl;
+  
+  gettimeofday(&start, nullptr);
+  for(int i=0;i < iter;++i)
+  {
+    Times(Plus(Value(10), Value(20)), Plus(Value(5), Value(10))).exec();
+    //std::cout << "eval = " 
+    //        << eval(Times(Plus(Value(10), Value(20)), Plus(Value(5), Value(10))))
+    //        << std::endl;
+  }
+  gettimeofday(&stop, nullptr);
+  std::cout << "Diff = " << stop - start << std::endl;
+}
+
+int main(int argc, char *argv[])
 {
   test_any();
   std::cout << "*********\n";
   test_variant();
   std::cout << "*********\n";
-  test_expr();
+  if(argc >= 2)
+    test_expr(atoi(argv[1]));
 }
