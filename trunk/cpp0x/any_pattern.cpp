@@ -89,19 +89,19 @@ Otherwise<Lambda> otherwise(Lambda&& l)
 template <class To, class From>
 typename std::enable_if<!is_any<From>::value &&
                         !is_variant<From>::value, To *>::type 
-ptr_cast(From &f) 
+try_cast(From &f) 
 {
   return dynamic_cast<To *>(&f);
 }
 
 template <class To>
-To * ptr_cast(boost::any &a) 
+To * try_cast(boost::any &a) 
 {
   return boost::any_cast<To>(&a);
 }
 
 template <class To, class... U>
-To * ptr_cast(boost::variant<U...> &v) 
+To * try_cast(boost::variant<U...> &v) 
 {
   return boost::get<To>(&v);
 }
@@ -116,19 +116,19 @@ struct type_switch : Fs...
   template <class Poly>
   void apply(Poly&& p) const 
   {
-    bool match_once = false;
-    NoOp(try_cast<Fs>(std::forward<Poly>(p), match_once)...);
+    bool matched = false;
+    NoOp(match_first<Fs>(std::forward<Poly>(p), matched)...);
   }
 
 private:
 
   template <class Otherwise, class Poly>
   typename std::enable_if<is_otherwise<Otherwise>::value, bool>::type
-  try_cast(Poly&& p, bool & match_once) const
+  match_first(Poly&& p, bool & matched) const
   {
-    if(!match_once) {
+    if(!matched) {
       (*this)(std::forward<Poly>(p));
-      match_once = true;
+      matched = true;
     }
     return true;
   }
@@ -147,15 +147,15 @@ private:
 
   template <class Lambda, class Poly>
   typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type 
-  try_cast(Poly&& p, bool & match_once) const
+  match_first(Poly&& p, bool & matched) const
   {
     typedef typename std::remove_reference<typename function_traits<Lambda>::argument_type>::type cast_type;
     
-    cast_type * case_ptr = ptr_cast<cast_type>(p);
-    if(!match_once && case_ptr) 
+    cast_type * case_ptr = try_cast<cast_type>(p);
+    if(!matched && case_ptr) 
     { 
       invoke(typename std::is_reference<Poly>::type(), case_ptr);
-      match_once = true;
+      matched = true;
     }
     return true;
   }
