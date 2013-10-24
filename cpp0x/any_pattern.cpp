@@ -71,7 +71,7 @@ void NoOp(T...) { }
 template <class Lambda>
 struct Otherwise : Lambda
 {
-  Otherwise(Lambda l) : Lambda(l) {}
+  Otherwise(Lambda l) : Lambda(std::move(l)) {}
 
   template <class Polymorphic>
   void operator ()(Polymorphic&& p) 
@@ -81,108 +81,105 @@ struct Otherwise : Lambda
 };
 
 template <class Lambda>
-Otherwise<Lambda> otherwise(Lambda l)
+Otherwise<Lambda> otherwise(Lambda&& l)
 {
-  return Otherwise<Lambda>(l);
+  return Otherwise<Lambda>(std::forward<Lambda>(l));
+}
+
+template <class To, class From>
+typename std::enable_if<!is_any<From>::value &&
+                        !is_variant<From>::value, To *>::type 
+ptr_cast(From &f) 
+{
+  return dynamic_cast<To *>(&f);
+}
+
+template <class To>
+To * ptr_cast(boost::any &a) 
+{
+  return boost::any_cast<To>(&a);
+}
+
+template <class To, class... U>
+To * ptr_cast(boost::variant<U...> &v) 
+{
+  return boost::get<To>(&v);
 }
 
 template <class... Fs>
-struct overload_set : Fs...
+struct type_switch : Fs...
 {
-  overload_set(Fs... f) 
+  type_switch(Fs... f) 
     : Fs(std::move(f))... 
   {}
 
-  template <class Polymorphic>
-  void type_switch(Polymorphic &p) const 
+  template <class Poly>
+  void apply(Poly&& p) const 
   {
     bool match_once = false;
-    NoOp(try_cast<Fs>(p, match_once)...);
+    NoOp(try_cast<Fs>(std::forward<Poly>(p), match_once)...);
   }
 
 private:
 
-  template <class Otherwise, class Polymorphic>
+  template <class Otherwise, class Poly>
   typename std::enable_if<is_otherwise<Otherwise>::value, bool>::type
-  try_cast(Polymorphic & p, bool & match_once) const
+  try_cast(Poly&& p, bool & match_once) const
   {
     if(!match_once) {
-      (*this)(p);
+      (*this)(std::forward<Poly>(p));
       match_once = true;
     }
     return true;
   }
-
-  template <class T, class Base>
-  typename std::enable_if<!is_any<Base>::value &&
-                          !is_variant<Base>::value &&
-                          !is_otherwise<T>::value &&      
-                          !is_otherwise<Base>::value, bool>::type 
-  try_cast(Base & base, bool & match_once) const
+ 
+  template <class U>
+  void invoke(std::true_type, U *case_ptr) const
   {
-    typedef typename std::remove_reference<typename function_traits<T>::argument_type>::type cast_type;
-    
-    if(!match_once && (dynamic_cast<cast_type *>(&base) != nullptr)) {
-       (*this)(*dynamic_cast<cast_type *>(&base));
-       match_once = true;
-    }
-
-    return true;
+    (*this)(*case_ptr);
   }
 
-  template <class T, class... U>
-  typename std::enable_if<!is_otherwise<T>::value, bool>::type
-  try_cast(boost::variant<U...> & var, bool & match_once) const
+  template <class U>
+  void invoke(std::false_type, U *case_ptr) const
   {
-    typedef typename function_traits<T>::argument_type cast_type;
-    
-    if(!match_once && (boost::get<cast_type>(&var) != nullptr)) {
-      (*this)(boost::get<cast_type>(var)); 
-      match_once = true;
-    }
-
-    return true;
+    (*this)(std::move(*case_ptr));
   }
 
-  template <class T>
-  typename std::enable_if<!is_otherwise<T>::value, bool>::type
-  try_cast(boost::any & a, bool &match_once) const 
+  template <class Lambda, class Poly>
+  typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type 
+  try_cast(Poly&& p, bool & match_once) const
   {
-    typedef typename function_traits<T>::argument_type cast_type;
+    typedef typename std::remove_reference<typename function_traits<Lambda>::argument_type>::type cast_type;
     
-    if(!match_once && (typeid(cast_type) == a.type())) {
-      (*this)(boost::any_cast<cast_type>(a)); 
+    cast_type * case_ptr = ptr_cast<cast_type>(p);
+    if(!match_once && case_ptr) 
+    { 
+      invoke(typename std::is_reference<Poly>::type(), case_ptr);
       match_once = true;
     }
-
     return true;
   }
 };
-
-template <class... Fs>
-overload_set<Fs...> overload(Fs&&... x)
-{
-  return overload_set<Fs...>(std::forward<Fs>(x)...);
-}
 
 template <class T>
 class Matcher
 {
-  T &t_;
+  typedef typename std::add_rvalue_reference<T>::type TRef;
+  TRef t_;
 public:  
-  Matcher(T &t) : t_(t) {}
+  Matcher(TRef t) : t_(std::forward<T>(t)) {}
 
   template <class... Fs>
   void operator()(Fs&&... f) const 
   {
-    overload_set<Fs...>(std::forward<Fs>(f)...).type_switch(t_);
+    type_switch<Fs...>(std::forward<Fs>(f)...).apply(std::forward<T>(t_));
   }
 };
 
 template <class T>
-Matcher<T> match(T& t)
+Matcher<T&&> match(T&& t)
 {
-  return Matcher<T>(t);
+  return Matcher<T&&>(std::forward<T>(t));
 }
 
 void test_any(void)
@@ -196,16 +193,17 @@ void test_any(void)
   
   for(auto & any : va)
   {
-    match(any)(
-      [](int i)  { std::cout << "int = " << i << "\n"; },
-      [](double d)  { std::cout << "double = " << d << "\n"; },
-      [](const std::string & s)  { std::cout << "std::string = " << s << "\n"; },
-      [](char c) { std::cout << "char = " << c << "\n"; },
-      otherwise([](decltype(any) &a) { 
-        std::cout << "Otherwise: no match found: "; 
+    match(boost::any(any))(
+      [](int i)                  { std::cout << "int = " << i << "\n"; },
+      [](double d)               { std::cout << "double = " << d << "\n"; },
+      [](std::string & s)        { std::cout << "std::string = " << s << "\n"; },
+      [](std::string && s)       { std::cout << "rvalue std::string = " << s << "\n"; },
+      [](char c)                 { std::cout << "char = " << c << "\n"; },
+      otherwise([](boost::any a) { 
+        std::cout << "rvalue any: "; 
         if(typeid(bool) == a.type())
           std::cout << std::boolalpha << boost::any_cast<bool>(a) << "\n";
-        }) 
+      }) 
     );
   }
 }
@@ -224,7 +222,7 @@ void test_variant()
       [](int i)  { std::cout << "int = " << i << "\n"; },
       [](double d)  { std::cout << "double = " << d << "\n"; },
       [](const std::string & s)  { std::cout << "std::string = " << s << "\n"; },
-      //[](char c) { std::cout << "char = " << c << "\n"; },
+      [](char c) { std::cout << "char = " << c << "\n"; },
       otherwise([](decltype(var) &var) {
         std::cout << "Otherwise: no match found\n"; 
         }) 
