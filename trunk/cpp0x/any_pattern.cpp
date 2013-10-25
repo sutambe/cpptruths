@@ -65,6 +65,16 @@ struct is_any<boost::variant<U...>> : std::true_type {};
 template <class... U>
 struct is_any<const boost::variant<U...>> : std::true_type {};
 
+template <bool, class Op>
+struct add_const_if {
+  typedef typename std::add_const<Op>::type type;
+};
+
+template <class Op>
+struct add_const_if<false, Op> {
+  typedef Op type;
+};
+
 template <class... T>
 void NoOp(T...) { }
 
@@ -102,6 +112,18 @@ To * try_cast(boost::any &a)
 
 template <class To, class... U>
 To * try_cast(boost::variant<U...> &v) 
+{
+  return boost::get<To>(&v);
+}
+
+template <class To>
+const To * try_cast(const boost::any &a) 
+{
+  return boost::any_cast<To>(&a);
+}
+
+template <class To, class... U>
+const To * try_cast(const boost::variant<U...> &v) 
 {
   return boost::get<To>(&v);
 }
@@ -149,9 +171,11 @@ private:
   typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type 
   match_first(Poly&& p, bool & matched) const
   {
-    typedef typename std::remove_reference<typename function_traits<Lambda>::argument_type>::type cast_type;
+    typedef typename function_traits<Lambda>::argument_type arg_type;
+    typedef typename std::remove_reference<arg_type>::type noref_type;
+    typedef typename add_const_if<std::is_const<Poly>::value, noref_type>::type cast_t;
     
-    cast_type * case_ptr = try_cast<cast_type>(p);
+    cast_t * case_ptr = try_cast<cast_t>(p);
     if(!matched && case_ptr) 
     { 
       invoke(typename std::is_reference<Poly>::type(), case_ptr);
@@ -191,13 +215,15 @@ void test_any(void)
   va.push_back(10.20);
   va.push_back(true);
   
-  for(auto & any : va)
+  for(const auto & any : va)
   {
-    match(boost::any(any))(
+    match(std::move(any))(
       [](int i)                  { std::cout << "int = " << i << "\n"; },
       [](double d)               { std::cout << "double = " << d << "\n"; },
-      [](std::string & s)        { std::cout << "std::string = " << s << "\n"; },
+      [](std::string & s)        { std::cout << "lvalue std::string = " << s << "\n"; },
       [](std::string && s)       { std::cout << "rvalue std::string = " << s << "\n"; },
+      [](const std::string & s)  { std::cout << "const lvalue std::string = " << s << "\n"; },
+      [](const std::string && s) { std::cout << "const rvalue std::string = " << s << "\n"; },
       [](char c)                 { std::cout << "char = " << c << "\n"; },
       otherwise([](boost::any a) { 
         std::cout << "rvalue any: "; 
@@ -219,10 +245,10 @@ void test_variant()
   for(auto & var : vv)
   {
     match(var)(
-      [](int i)  { std::cout << "int = " << i << "\n"; },
-      [](double d)  { std::cout << "double = " << d << "\n"; },
-      [](const std::string & s)  { std::cout << "std::string = " << s << "\n"; },
-      [](char c) { std::cout << "char = " << c << "\n"; },
+      [](int i)            { std::cout << "int = " << i << "\n"; },
+      [](double d)         { std::cout << "double = " << d << "\n"; },
+      [](std::string & s)  { std::cout << "std::string = " << s << "\n"; },
+      [](char c)           { std::cout << "char = " << c << "\n"; },
       otherwise([](decltype(var) &var) {
         std::cout << "Otherwise: no match found\n"; 
         }) 
