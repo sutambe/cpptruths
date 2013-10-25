@@ -1,3 +1,8 @@
+/**
+  Distributed under the New BSD License
+  Copyright (c) 2013, Sumant Tambe
+*/
+
 #include <sys/time.h>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
