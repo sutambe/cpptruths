@@ -65,10 +65,10 @@ template <class T>
 struct is_variant : std::false_type {};
 
 template <class... U>
-struct is_any<boost::variant<U...>> : std::true_type {};
+struct is_variant<boost::variant<U...>> : std::true_type {};
 
 template <class... U>
-struct is_any<const boost::variant<U...>> : std::true_type {};
+struct is_variant<const boost::variant<U...>> : std::true_type {};
 
 template <bool, class Op>
 struct add_const_if {
