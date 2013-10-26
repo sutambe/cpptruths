@@ -72,12 +72,12 @@ struct is_variant<const boost::variant<U...>> : std::true_type {};
 
 template <bool, class Op>
 struct add_const_if {
-  typedef typename std::add_const<Op>::type type;
+  typedef Op type;
 };
 
 template <class Op>
-struct add_const_if<false, Op> {
-  typedef Op type;
+struct add_const_if<true, Op> {
+  typedef const Op type;
 };
 
 template <class... T>
@@ -88,10 +88,10 @@ struct Otherwise : Lambda
 {
   Otherwise(Lambda l) : Lambda(std::move(l)) {}
 
-  template <class Polymorphic>
-  void operator ()(Polymorphic&& p) 
+  template <class Poly>
+  void operator ()(Poly&& p) 
   {
-    Lambda::operator()(std::forward<Polymorphic>(p));
+    Lambda::operator()(std::forward<Poly>(p));
   }
 };
 
@@ -141,7 +141,7 @@ struct type_switch : Fs...
   {}
 
   template <class Poly>
-  void apply(Poly&& p) const 
+  void apply(Poly&& p)  
   {
     bool matched = false;
     NoOp(match_first<Fs>(std::forward<Poly>(p), matched)...);
@@ -149,9 +149,9 @@ struct type_switch : Fs...
 
 private:
 
-  template <class Otherwise, class Poly>
-  typename std::enable_if<is_otherwise<Otherwise>::value, bool>::type
-  match_first(Poly&& p, bool & matched) const
+  template <class Functor, class Poly>
+  typename std::enable_if<is_otherwise<Functor>::value, bool>::type
+  match_first(Poly&& p, bool & matched) 
   {
     if(!matched) {
       (*this)(std::forward<Poly>(p));
@@ -161,29 +161,28 @@ private:
   }
  
   template <class U>
-  void invoke(std::true_type, U *case_ptr) const
+  void invoke(U *case_ptr, std::true_type) 
   {
     (*this)(*case_ptr);
   }
 
   template <class U>
-  void invoke(std::false_type, U *case_ptr) const
+  void invoke(U *case_ptr, std::false_type) 
   {
     (*this)(std::move(*case_ptr));
   }
 
   template <class Lambda, class Poly>
   typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type 
-  match_first(Poly&& p, bool & matched) const
+  match_first(Poly&& p, bool & matched) 
   {
     typedef typename function_traits<Lambda>::argument_type arg_type;
     typedef typename std::remove_reference<arg_type>::type noref_type;
     typedef typename add_const_if<std::is_const<Poly>::value, noref_type>::type cast_t;
     
-    cast_t * case_ptr = try_cast<cast_t>(p);
-    if(!matched && case_ptr) 
+    if(!matched && try_cast<cast_t>(p)) 
     { 
-      invoke(typename std::is_reference<Poly>::type(), case_ptr);
+      invoke(try_cast<cast_t>(p), typename std::is_reference<Poly>::type());
       matched = true;
     }
     return true;
@@ -199,7 +198,7 @@ public:
   Matcher(TRef t) : t_(std::forward<T>(t)) {}
 
   template <class... Fs>
-  void operator()(Fs&&... f) const 
+  void operator()(Fs&&... f)  
   {
     type_switch<Fs...>(std::forward<Fs>(f)...).apply(std::forward<T>(t_));
   }
@@ -211,6 +210,29 @@ Matcher<T&&> match(T&& t)
   return Matcher<T&&>(std::forward<T>(t));
 }
 
+template <class... Fs>
+struct TypeSwitchApplicator
+{
+  type_switch<Fs...> ts_;
+
+  TypeSwitchApplicator(type_switch<Fs...> ts)
+    : ts_(std::move(ts))
+  {}
+
+  template <class Arg>
+  void operator ()(Arg&& arg) 
+  {
+    ts_.apply(std::forward<Arg>(arg));
+  }
+};
+
+template <class... Fs>
+TypeSwitchApplicator<Fs...> typeswitch(Fs&&... f)
+{
+  return type_switch<Fs...>(std::forward<Fs>(f)...);
+}
+
+template <class T>
 void test_any(void)
 {
   std::vector<boost::any> va;
@@ -220,10 +242,10 @@ void test_any(void)
   va.push_back(10.20);
   va.push_back(true);
   
-  for(const auto & any : va)
+  for(T any : va)
   {
     match(std::move(any))(
-      [](int i)                  { std::cout << "int = " << i << "\n"; },
+      [](int i) mutable          { std::cout << "int = " << i << "\n"; },
       [](double d)               { std::cout << "double = " << d << "\n"; },
       [](std::string & s)        { std::cout << "lvalue std::string = " << s << "\n"; },
       [](std::string && s)       { std::cout << "rvalue std::string = " << s << "\n"; },
@@ -231,7 +253,7 @@ void test_any(void)
       [](const std::string && s) { std::cout << "const rvalue std::string = " << s << "\n"; },
       [](char c)                 { std::cout << "char = " << c << "\n"; },
       otherwise([](boost::any a) { 
-        std::cout << "rvalue any: "; 
+        std::cout << "Otherwise: pass-by-value any: "; 
         if(typeid(bool) == a.type())
           std::cout << std::boolalpha << boost::any_cast<bool>(a) << "\n";
       }) 
@@ -239,25 +261,62 @@ void test_any(void)
   }
 }
 
+template <class Variant>
 void test_variant()
 {
-  std::vector<boost::variant<int, char, std::string, double>> vv;
+  typedef typename std::remove_const<
+    typename std::remove_reference<Variant>::type>::type 
+      NoRefVariant;
+  std::vector<NoRefVariant> vv;
+
   vv.push_back(10);
   vv.push_back('Z');
   vv.push_back(std::string("Sumant"));
   vv.push_back(10.20);
-  
-  for(auto & var : vv)
+ 
+  for(Variant var : vv)
   {
-    match(var)(
-      [](int i)            { std::cout << "int = " << i << "\n"; },
-      [](double d)         { std::cout << "double = " << d << "\n"; },
-      [](std::string & s)  { std::cout << "std::string = " << s << "\n"; },
-      [](char c)           { std::cout << "char = " << c << "\n"; },
-      otherwise([](decltype(var) &var) {
-        std::cout << "Otherwise: no match found\n"; 
+    match(std::move(var))(
+      [](int i)                  { std::cout << "int = " << i << "\n"; },
+      [](double d)               { std::cout << "double = " << d << "\n"; },
+      [](const std::string & s)  { std::cout << "std::string = " << s << "\n"; },
+      [](char c)                 { std::cout << "char = " << c << "\n"; },
+      otherwise([](NoRefVariant var) {
+        std::cout << "Otherwise: pass-by-value variant: no match found\n"; 
         }) 
     );
+  }
+}
+
+template <class T>
+void test_switch()
+{
+  std::vector<boost::any> va;
+  va.push_back(10);
+  va.push_back('Z');
+  va.push_back(std::string("Sumant"));
+  va.push_back(10.20);
+  va.push_back(true);
+  
+  std::function<void(T)> ts = 
+    typeswitch(
+        [](int i)                  { std::cout << "int = " << i << "\n"; },
+        [](double d)               { std::cout << "double = " << d << "\n"; },
+        [](std::string & s)        { std::cout << "lvalue std::string = " << s << "\n"; },
+        [](std::string && s)       { std::cout << "rvalue std::string = " << s << "\n"; },
+        [](const std::string & s)  { std::cout << "const lvalue std::string = " << s << "\n"; },
+        [](const std::string && s) { std::cout << "const rvalue std::string = " << s << "\n"; },
+        [](char c)                 { std::cout << "char = " << c << "\n"; },
+        otherwise([](boost::any a) { 
+          std::cout << "otherwise: pass-by-value any: "; 
+          if(typeid(bool) == a.type())
+            std::cout << std::boolalpha << boost::any_cast<bool>(a) << "\n";
+        }) 
+      );
+
+  for(T any : va)
+  {
+    ts(any);
   }
 }
 
@@ -354,12 +413,78 @@ void test_expr(int iter)
   std::cout << "Diff = " << stop - start << std::endl;
 }
 
+struct Shape
+{
+  virtual ~Shape() {}
+};
+
+struct Rollable 
+{
+  virtual ~Rollable() {}
+};
+
+struct Circle : Shape, Rollable {};
+struct Triangle : Shape {};
+struct Square : Shape {};
+
+void test_rollable()
+{
+  Square s1, s2;
+  Circle c1, c2;
+  Triangle t1;
+  std::vector<Shape *> vs;
+
+  vs.push_back(&s1);
+  vs.push_back(&s2);
+  vs.push_back(&c1);
+  vs.push_back(&c2);
+  vs.push_back(&t1);
+
+  for(Shape *s : vs)
+  {
+    match(*s)(
+      [](Square &s)    { std::cout << "square\n"; },
+      [](Rollable &r)  { std::cout << "rollable\n"; },
+      otherwise([](Shape &s) {
+          std::cout << "generic shape\n";
+      })
+    );
+  }
+}
+
 int main(int argc, char *argv[])
 {
-  test_any();
+  test_any<boost::any>();
   std::cout << "*********\n";
-  test_variant();
+  test_any<const boost::any>();
   std::cout << "*********\n";
+  test_any<boost::any &>();
+  std::cout << "*********\n";
+  test_any<const boost::any &>();
+  std::cout << "*********\n";
+
+  typedef boost::variant<int, char, std::string, double> Variant;
+  test_variant<Variant>();
+  std::cout << "*********\n";
+  test_variant<const Variant>();
+  std::cout << "*********\n";
+  test_variant<Variant &>();
+  std::cout << "*********\n";
+  test_variant<const Variant &>();
+  std::cout << "*********\n";
+
+  test_switch<boost::any>();
+  std::cout << "*********\n";
+  test_switch<const boost::any>();
+  std::cout << "*********\n";
+  test_switch<boost::any &>();
+  std::cout << "*********\n";
+  test_switch<const boost::any &>();
+  std::cout << "*********\n";
+
+  test_rollable();
+  std::cout << "*********\n";
+
   if(argc >= 2)
     test_expr(atoi(argv[1]));
 }
