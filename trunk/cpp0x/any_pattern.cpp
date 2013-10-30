@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <list>
 
 template <typename T>
 struct function_traits
@@ -80,9 +81,6 @@ struct add_const_if<true, Op> {
   typedef const Op type;
 };
 
-template <class... T>
-void NoOp(T...) { }
-
 template <class Lambda>
 struct Otherwise : Lambda
 {
@@ -104,33 +102,33 @@ Otherwise<Lambda> otherwise(Lambda&& l)
 template <class To, class From>
 typename std::enable_if<!is_any<From>::value &&
                         !is_variant<From>::value, To *>::type 
-try_cast(From &f) 
+try_cast(From *f) 
 {
-  return dynamic_cast<To *>(&f);
+  return dynamic_cast<To *>(f);
 }
 
 template <class To>
-To * try_cast(boost::any &a) 
+To * try_cast(boost::any *a) 
 {
-  return boost::any_cast<To>(&a);
+  return boost::any_cast<To>(a);
 }
 
 template <class To, class... U>
-To * try_cast(boost::variant<U...> &v) 
+To * try_cast(boost::variant<U...> *v) 
 {
-  return boost::get<To>(&v);
+  return boost::get<To>(v);
 }
 
 template <class To>
-const To * try_cast(const boost::any &a) 
+const To * try_cast(const boost::any *a) 
 {
-  return boost::any_cast<To>(&a);
+  return boost::any_cast<To>(a);
 }
 
 template <class To, class... U>
-const To * try_cast(const boost::variant<U...> &v) 
+const To * try_cast(const boost::variant<U...> *v) 
 {
-  return boost::get<To>(&v);
+  return boost::get<To>(v);
 }
 
 template <class... Fs>
@@ -144,14 +142,17 @@ struct type_switch : Fs...
   void apply(Poly&& p)  
   {
     bool matched = false;
-    NoOp(match_first<Fs>(std::forward<Poly>(p), matched)...);
+    bool val[sizeof...(Fs)] = 
+      { match_first<Fs>(std::forward<Poly>(p), 
+                        matched,
+                        typename is_otherwise<Fs>::type())... };
+    (void)val;
   }
 
 private:
 
-  template <class Functor, class Poly>
-  typename std::enable_if<is_otherwise<Functor>::value, bool>::type
-  match_first(Poly&& p, bool & matched) 
+  template <class Otherwise, class Poly>
+  bool match_first(Poly&& p, bool & matched, std::true_type /* is_otherwise */) 
   {
     if(!matched) {
       (*this)(std::forward<Poly>(p));
@@ -160,32 +161,33 @@ private:
     return true;
   }
  
-  template <class U>
-  void invoke(U *case_ptr, std::true_type) 
-  {
-    (*this)(*case_ptr);
-  }
-
-  template <class U>
-  void invoke(U *case_ptr, std::false_type) 
-  {
-    (*this)(std::move(*case_ptr));
-  }
-
   template <class Lambda, class Poly>
-  typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type 
-  match_first(Poly&& p, bool & matched) 
+  bool match_first(Poly&& p, bool & matched, std::false_type /* is_otherwise */) 
   {
     typedef typename function_traits<Lambda>::argument_type arg_type;
     typedef typename std::remove_reference<arg_type>::type noref_type;
     typedef typename add_const_if<std::is_const<Poly>::value, noref_type>::type cast_t;
+
+    auto target_ptr = try_cast<cast_t>(&p);
     
-    if(!matched && try_cast<cast_t>(p)) 
+    if(!matched && target_ptr) 
     { 
-      invoke(try_cast<cast_t>(p), typename std::is_reference<Poly>::type());
+      invoke(target_ptr, typename std::is_reference<Poly>::type());
       matched = true;
     }
     return true;
+  }
+
+  template <class U>
+  void invoke(U *target_ptr, std::true_type /* is_reference */) 
+  {
+    (*this)(*target_ptr);
+  }
+
+  template <class U>
+  void invoke(U *target_ptr, std::false_type /* is_reference */) 
+  {
+    (*this)(std::move(*target_ptr));
   }
 };
 
@@ -205,9 +207,9 @@ public:
 };
 
 template <class T>
-Matcher<T&&> match(T&& t)
+Matcher<T> match(T&& t)
 {
-  return Matcher<T&&>(std::forward<T>(t));
+  return Matcher<T>(std::forward<T>(t));
 }
 
 template <class... Fs>
@@ -241,7 +243,7 @@ void test_any(void)
   va.push_back(std::string("Sumant"));
   va.push_back(10.20);
   va.push_back(true);
-  
+ 
   for(T any : va)
   {
     match(std::move(any))(
@@ -311,8 +313,7 @@ void test_switch()
           std::cout << "otherwise: pass-by-value any: "; 
           if(typeid(bool) == a.type())
             std::cout << std::boolalpha << boost::any_cast<bool>(a) << "\n";
-        }) 
-      );
+        }));
 
   for(T any : va)
   {
