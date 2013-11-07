@@ -101,7 +101,17 @@ Otherwise<Lambda> otherwise(Lambda&& l)
 
 template <class To, class From>
 typename std::enable_if<!is_any<From>::value &&
-                        !is_variant<From>::value, To *>::type 
+                        !is_variant<From>::value &&
+                        !std::is_class<To>::value, To *>::type 
+try_cast(From *) 
+{
+  return nullptr;
+}
+
+template <class To, class From>
+typename std::enable_if<!is_any<From>::value &&
+                        !is_variant<From>::value &&
+                         std::is_class<To>::value, To *>::type 
 try_cast(From *f) 
 {
   return dynamic_cast<To *>(f);
@@ -143,16 +153,16 @@ struct type_switch : Fs...
   {
     bool matched = false;
     bool val[sizeof...(Fs)] = 
-      { match_first<Fs>(std::forward<Poly>(p), 
-                        matched,
-                        typename is_otherwise<Fs>::type())... };
+      { match_first<Fs>(std::forward<Poly>(p), matched)... };
+
     (void)val;
   }
 
 private:
 
   template <class Otherwise, class Poly>
-  bool match_first(Poly&& p, bool & matched, std::true_type /* is_otherwise */) 
+  typename std::enable_if<is_otherwise<Otherwise>::value, bool>::type
+  match_first(Poly&& p, bool & matched) 
   {
     if(!matched) {
       (*this)(std::forward<Poly>(p));
@@ -162,18 +172,21 @@ private:
   }
  
   template <class Lambda, class Poly>
-  bool match_first(Poly&& p, bool & matched, std::false_type /* is_otherwise */) 
+  typename std::enable_if<!is_otherwise<Lambda>::value, bool>::type
+  match_first(Poly&& p, bool & matched) 
   {
     typedef typename function_traits<Lambda>::argument_type arg_type;
     typedef typename std::remove_reference<arg_type>::type noref_type;
     typedef typename add_const_if<std::is_const<Poly>::value, noref_type>::type cast_t;
 
-    auto target_ptr = try_cast<cast_t>(&p);
-    
-    if(!matched && target_ptr) 
-    { 
-      invoke(target_ptr, typename std::is_reference<Poly>::type());
-      matched = true;
+    if(!matched)
+    {
+      auto target_ptr = try_cast<cast_t>(&p);
+      if(target_ptr) 
+      { 
+        invoke(target_ptr, typename std::is_reference<Poly>::type());
+        matched = true;
+      }
     }
     return true;
   }
@@ -453,6 +466,18 @@ void test_rollable()
   }
 }
 
+template <class Poly>
+void test_poly(Poly &p)
+{
+  match(p)(
+    [](int i)                  { std::cout << "int = "    << i << "\n"; },
+    [](double d)               { std::cout << "double = " << d << "\n"; },
+    [](const std::string & s)  { std::cout << "string = " << s << "\n"; },
+    [](std::ostream &o)        { std::cout << "found ostream"  << "\n"; }
+  );  
+}
+
+
 int main(int argc, char *argv[])
 {
   test_any<boost::any>();
@@ -488,4 +513,7 @@ int main(int argc, char *argv[])
 
   if(argc >= 2)
     test_expr(atoi(argv[1]));
+
+  std::ios_base &stream = std::cout;
+  test_poly(stream); 
 }
