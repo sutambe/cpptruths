@@ -593,6 +593,10 @@ struct generic_lambda
     void operator ()(T &) { std::cout << "don't know\n"; }
 };
 
+class Base {};
+class Derived1 : public Base {};
+class Derived2 : public Derived1 {};
+
 template <class Poly>
 void test_poly(Poly& p)
 {
@@ -601,9 +605,12 @@ void test_poly(Poly& p)
     [](int i)                  { std::cout << "int = "    << i << "\n"; },
     [](double d)               { std::cout << "double = " << d << "\n"; },
     [](const std::string &s)   { std::cout << "string = " << s << "\n"; },
-    [](std::ostream &o)        { std::cout << "found ostream"  << "\n"; })
+    [](const std::ostream &o)  { std::cout << "found ostream\n";        },
+    [](Derived2 &)             { std::cout << "found Derived2\n";       },
+    [](const Base &)           { std::cout << "found Base\n";           }
   );  
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -643,13 +650,18 @@ int main(int argc, char *argv[])
 
   std::ios_base &stream = std::cout;
   boost::any any(std::string("C++ Truths"));
-  boost::variant<int, std::string> var("boost");
   double d = 9.99;
   char c = 'Z';
+  boost::variant<int, std::string> var("boost");
+  enum Color { Red=1, Green=2, Blue=3 };
+  Color color = Red;
+  Derived2 d2;
   
   test_poly(stream); 
   test_poly(any);
   test_poly(d);
   test_poly(var);
   test_poly(c);
+  test_poly(color);
+  test_poly(d2);
 }
