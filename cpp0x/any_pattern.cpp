@@ -1,8 +1,7 @@
 /**
-  Distributed under the New BSD License
-  Copyright (c) 2013, Sumant Tambe
+  Distributed under the Boost Software License - Version 1.0
+  Author: Sumant Tambe
 */
-
 #include <sys/time.h>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
@@ -10,8 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <map>
-#include <list>
+#include <functional>
 
 template <typename T>
 struct function_traits
@@ -102,7 +100,8 @@ Otherwise<Lambda> otherwise(Lambda&& l)
 template <class To, class From>
 typename std::enable_if<!is_any<From>::value &&
                         !is_variant<From>::value &&
-                        !std::is_class<To>::value, To *>::type 
+                        (std::is_class<From>::value ^
+                         std::is_class<To>::value), To *>::type 
 try_cast(From *) 
 {
   return nullptr;
@@ -111,6 +110,28 @@ try_cast(From *)
 template <class To, class From>
 typename std::enable_if<!is_any<From>::value &&
                         !is_variant<From>::value &&
+                        !std::is_class<From>::value &&
+                        !std::is_class<To>::value, From *>::type 
+try_cast(From *f) 
+{
+  return f;
+}
+
+template <class To, class From>
+typename std::enable_if<!is_any<From>::value &&
+                        !is_variant<From>::value &&
+                        !std::is_polymorphic<From>::value &&
+                         std::is_class<From>::value &&
+                         std::is_class<To>::value, From *>::type 
+try_cast(From *f) 
+{
+  return f;
+}
+
+template <class To, class From>
+typename std::enable_if<!is_any<From>::value &&
+                        !is_variant<From>::value &&
+                         std::is_polymorphic<From>::value &&
                          std::is_class<To>::value, To *>::type 
 try_cast(From *f) 
 {
@@ -141,6 +162,105 @@ const To * try_cast(const boost::variant<U...> *v)
   return boost::get<To>(v);
 }
 
+#ifndef ORDER_DEPENDENT
+template <class... Fs>
+class type_switch : Fs...
+{
+  template <class Head, class... Tail>
+  struct ChainOfResponsibility
+  {
+    template <class TypeSwitch, class Poly>
+    static void call(TypeSwitch& ts, Poly&& p, bool & matched) 
+    {
+      if(!matched)
+      {
+        ts.template match<Head>(std::forward<Poly>(p), matched);
+        if(!matched)
+          ChainOfResponsibility<Tail...>::call(ts, std::forward<Poly>(p), matched);
+      }
+    }
+  };
+
+  template <class LastFunctor>
+  struct ChainOfResponsibility<LastFunctor>
+  {
+    template <class TypeSwitch, class Poly>
+    static void call(TypeSwitch& ts, Poly&& p, bool & matched) 
+    {
+      if(!matched) 
+        ts.template match<LastFunctor>(std::forward<Poly>(p), matched);
+    }
+  };
+  
+  template <class Lambda, class... Functor>
+  struct ChainOfResponsibility<Otherwise<Lambda>, Functor...>
+  {
+    template <class TypeSwitch, class Poly>
+    static void call(TypeSwitch& ts, Poly&& p, bool & matched) 
+    {
+      if(!matched) 
+      {
+        ChainOfResponsibility<Functor...>::call(ts, std::forward<Poly>(p), matched);
+        ChainOfResponsibility<Otherwise<Lambda>>::call(ts, std::forward<Poly>(p), matched);
+      }
+    }
+  };
+  
+  template <class Lambda>
+  struct ChainOfResponsibility<Otherwise<Lambda>>
+  {
+    template <class TypeSwitch, class Poly>
+    static void call(TypeSwitch& ts, Poly&& p, bool & matched) 
+    {
+      if(!matched) 
+        ts.Otherwise<Lambda>::operator()(std::forward<Poly>(p));
+    }
+  };
+  
+public:
+  type_switch(Fs... f) 
+    : Fs(std::move(f))... 
+  {}
+
+  template <class Poly>
+  void apply(Poly&& p)  
+  {
+    bool matched = false;
+    ChainOfResponsibility<Fs...>::call(*this, std::forward<Poly>(p), matched);
+  }
+
+private:
+ 
+  template <class Lambda, class Poly>
+  void match(Poly&& p, bool & matched) 
+  {
+    typedef typename function_traits<Lambda>::argument_type arg_type;
+    typedef typename std::remove_reference<arg_type>::type noref_type;
+    typedef typename add_const_if<std::is_const<Poly>::value, noref_type>::type cast_t;
+
+    auto target_ptr = try_cast<cast_t>(&p);
+    if(target_ptr) 
+    { 
+      invoke(target_ptr, typename std::is_reference<Poly>::type());
+      matched = true;
+    }
+  }
+
+  template <class U>
+  void invoke(U *target_ptr, std::true_type /* is_reference */) 
+  {
+    (*this)(*target_ptr);
+  }
+
+  template <class U>
+  void invoke(U *target_ptr, std::false_type /* is_reference */) 
+  {
+    (*this)(std::move(*target_ptr));
+  }
+};
+#endif // ORDER_DEPENDENT
+
+#ifdef ORDER_DEPENDENT
 template <class... Fs>
 struct type_switch : Fs...
 {
@@ -203,6 +323,7 @@ private:
     (*this)(std::move(*target_ptr));
   }
 };
+#endif // ORDER_DEPENDENT
 
 template <class T>
 class Matcher
@@ -253,7 +374,7 @@ void test_any(void)
   std::vector<boost::any> va;
   va.push_back(10);
   va.push_back('Z');
-  va.push_back(std::string("Sumant"));
+  va.push_back(std::string("C++ Truths"));
   va.push_back(10.20);
   va.push_back(true);
  
@@ -286,7 +407,7 @@ void test_variant()
 
   vv.push_back(10);
   vv.push_back('Z');
-  vv.push_back(std::string("Sumant"));
+  vv.push_back(std::string("C++ Truths"));
   vv.push_back(10.20);
  
   for(Variant var : vv)
@@ -309,7 +430,7 @@ void test_switch()
   std::vector<boost::any> va;
   va.push_back(10);
   va.push_back('Z');
-  va.push_back(std::string("Sumant"));
+  va.push_back(std::string("C++ Truths"));
   va.push_back(10.20);
   va.push_back(true);
   
@@ -466,17 +587,23 @@ void test_rollable()
   }
 }
 
+struct generic_lambda
+{
+    template <class T>
+    void operator ()(T &) { std::cout << "don't know\n"; }
+};
+
 template <class Poly>
-void test_poly(Poly &p)
+void test_poly(Poly& p)
 {
   match(p)(
+    otherwise(generic_lambda()),
     [](int i)                  { std::cout << "int = "    << i << "\n"; },
     [](double d)               { std::cout << "double = " << d << "\n"; },
-    [](const std::string & s)  { std::cout << "string = " << s << "\n"; },
-    [](std::ostream &o)        { std::cout << "found ostream"  << "\n"; }
+    [](const std::string &s)   { std::cout << "string = " << s << "\n"; },
+    [](std::ostream &o)        { std::cout << "found ostream"  << "\n"; })
   );  
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -515,5 +642,14 @@ int main(int argc, char *argv[])
     test_expr(atoi(argv[1]));
 
   std::ios_base &stream = std::cout;
+  boost::any any(std::string("C++ Truths"));
+  boost::variant<int, std::string> var("boost");
+  double d = 9.99;
+  char c = 'Z';
+  
   test_poly(stream); 
+  test_poly(any);
+  test_poly(d);
+  test_poly(var);
+  test_poly(c);
 }
