@@ -30,11 +30,18 @@ class TupleAt<Tuple, 0>
 
     static T & get(Tuple & tuple, size_t index)
     {
-      return std::get<0>(tuple);
+      if(index == 0)
+       return std::get<0>(tuple);
+      else
+       throw std::out_of_range("Tuple iterator dereferenced out of valid range.");
     }
     static const T & get_const(const Tuple & tuple, size_t index)
     {
-      return std::get<0>(tuple);
+      if(index == 0)
+       return std::get<0>(tuple);
+      else
+       throw std::out_of_range("Tuple iterator dereferenced out of valid range.");
+
     }
 };
 
@@ -58,6 +65,9 @@ class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
         ref_ = & TupleAt<Tuple>::get(*tuple, current_);
         last_ = current_;
       }
+      if(!ref_)
+        throw std::out_of_range("Tuple iterator dereferenced out of valid range.");
+      
       return ref_;
     }
 
@@ -65,11 +75,11 @@ class tuple_iterator : public std::iterator <std::random_access_iterator_tag,
   
     typedef int difference_type; 
 
-    explicit tuple_iterator(Tuple & t, int i = TUPLE_SIZE) 
+    explicit tuple_iterator(Tuple & t, size_t i = TUPLE_SIZE) 
       : tuple(&t), 
         current_(i), 
-        last_(i-1), 
-        ref_(&TupleAt<Tuple>::get(*tuple, last_)) 
+        last_(i), 
+        ref_((i==TUPLE_SIZE)? nullptr : &TupleAt<Tuple>::get(*tuple, last_)) 
     {}
     T & operator *() {
       return *update_ref();
@@ -224,8 +234,7 @@ int main(void)
   std::cout << std::endl;
   auto ta = make_tuple_array(4, 2, 1);
   std::cout << "sizeof(ta) = " << sizeof(ta) << std::endl;
-  std::cout << ta[0] << std::endl;
-  std::cout << ta[1] << std::endl;
+  std::cout << ta[0] << " " << ta[1] << " " << ta[2] << std::endl;
   std::sort(begin(ta), end(ta));
 
   for(int i : ta)
