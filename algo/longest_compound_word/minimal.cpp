@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -66,11 +65,6 @@ public:
   }
 };
 
-bool compare_len(const string& s1, const string& s2)
-{
-  return s1.size() > s2.size();
-}
-
 int main(int argc, char * argv[])
 {
   try {
@@ -89,19 +83,22 @@ int main(int argc, char * argv[])
       all.push_back(line);
     }
 
-    sort(all.begin(), all.end(), &compare_len);
-
-    int count = 0;
+    int count = 0, first = 0, second = 0;
     for(int i=0;i < all.size(); i++)
     {
       if (t.is_compound(all[i]))
       {
         count++;
-        if(count == 2)
-          cout << "Second longest = " << all[i] << "\n";
+        if(all[first].size() < all[i].size())
+        {
+          second = first;
+          first = i;
+        }
       }
     }
     time(&end);
+    cout << "Longest = " << all[first] << "\n";
+    cout << "2nd longest = " << all[second] << "\n";
     cout << "Total = " << count << "\n";
     cout << "elapsed time = " << end-start << "ms\n";
   }

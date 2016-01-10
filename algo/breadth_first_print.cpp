@@ -1,7 +1,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <algorithm>
+
+using namespace std;
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec)
@@ -54,6 +58,39 @@ void breadth_first_print(Node &root)
     }
 }
 
+void level_order_reverse(Node & root)
+{
+  stack<queue<Node *>> stack;
+  queue<Node *> s1, s2;
+  queue<Node *> *qp = &s1, *qc = &s2;
+  qp->push(&root);
+  stack.push(*qp);
+  
+  while(!qp->empty())
+  {
+    while(!qp->empty())
+    {
+      Node * node = qp->front(); qp->pop();
+      if(node->left) qc->push(node->left);      
+      if(node->right) qc->push(node->right);
+    }
+    stack.push(*qc);
+    std::swap(qp, qc);
+  }
+  
+  while(!stack.empty())
+  {
+    queue<Node *> & q = stack.top(); 
+    while(!q.empty())
+    {
+      std::cout << q.front()->value << " ";
+      q.pop();
+    }
+    stack.pop();
+    std::cout << "\n";
+  }
+}
+
 void breath_first_average(Node & root)
 {
   
@@ -75,5 +112,6 @@ int main()
     nodes[7].right = &nodes[10];
 
     breadth_first_print(nodes[1]);
+    level_order_reverse(nodes[1]);
 
 }

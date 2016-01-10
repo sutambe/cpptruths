@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <numeric>
 #include <iostream>
 #include <fstream>
@@ -174,24 +173,26 @@ int main(int argc, char * argv[])
     all.push_back(line);
   }
 
-  sort(all.begin(), all.end(), 
-    [](const string & s1, const string & s2) {
-    return s1.size() > s2.size();
-  });
-
   int count = 0;
-  for (const string & s : all)
+  string first, second;
+  for(int i=0;i < all.size(); i++)
   {
-    if (t.is_compound(s))
+    if (t.is_compound(all[i]))
     {
       count++;
-      if(count == 2)
-        cout << "Second longest = " << s << "\n";
+      if(first.size() < all[i].size())
+      {
+        second = first;
+        first = all[i];
+      }
     }
   }
+  
   end = std::chrono::system_clock::now();
+  cout << "Longest = " << first << "\n";
+  cout << "2nd longest = " << second << "\n";
   cout << "Total " << count << "\n";
   std::chrono::duration<double> elapsed_seconds = end - start;
   cout << "elapsed time = " << elapsed_seconds.count() << "s\n";
-  cout << "Longest = " << t.get_longest() << "\n";
+  cout << "Longest (via height) = " << t.get_longest() << "\n";
 }
