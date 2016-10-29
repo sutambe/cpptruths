@@ -2,6 +2,7 @@
 #include <string>
 #include <tuple>
 #include <memory>
+#include <type_traits>
 #include <boost/core/demangle.hpp>
 
 template <char... chars>
@@ -106,10 +107,78 @@ auto curried_printf_impl(const char * const fmt, IntSeq)
 
 #define curried_printf(X) curried_printf_impl(X, X##_stream)
 
+template <size_t... Indices, class Tuple, class Func>
+auto execute(std::integer_sequence<size_t, Indices...>,
+             Tuple &tuple,
+             Func &&func)
+{
+  return func(std::get<Indices>(tuple)...);
+}
+
+template <int I, class AllArgs, class Tuple>
+struct dyn_curry;
+
+template <int I, class AllArgs, class Head, class... Tail>
+struct dyn_curry<I, AllArgs, std::tuple<Head, Tail...>>
+{
+    enum { Index = std::tuple_size<AllArgs>::value - I };
+
+    template <class Func>
+    static auto apply(std::shared_ptr<AllArgs> shptr, Func&& func)
+    {
+      return [shptr, func=std::move(func)](const Head &h) mutable {
+        std::get<Index>(*shptr) = h;
+        return dyn_curry<I-1, AllArgs, std::tuple<Tail...>>::apply(shptr, func);
+      };
+    }    
+};
+
+template <class AllArgs, class Head>
+struct dyn_curry<1, AllArgs, std::tuple<Head>>
+{
+    enum { Index = std::tuple_size<AllArgs>::value - 1 };
+    using IntSeq = std::make_index_sequence<std::tuple_size<AllArgs>::value>;
+
+    template <class Func>
+    static auto apply(std::shared_ptr<AllArgs> shptr, Func&& func)
+    {
+      return [shptr, func=std::move(func)](const Head &h) mutable {
+        std::get<Index>(*shptr) = h;
+        return execute(IntSeq(), *shptr, func);
+      };
+    }    
+};
+
+template <class Ret, class... Args>
+auto arb_curry(Ret (&func) (Args...))
+{
+  using AllArgs = std::tuple<std::remove_const_t<std::remove_reference_t<Args>>...>;
+  std::cout << boost::core::demangle(typeid(AllArgs).name()) << "\n";
+  std::shared_ptr<AllArgs> shptr(new AllArgs);
+
+  return dyn_curry<std::tuple_size<AllArgs>::value, AllArgs, AllArgs>::apply(shptr, func); 
+}
+
+template <class Ret>
+Ret arb_curry(Ret (&func) ()) { return func(); }
+
+int add(int &i, int &j, int k) { return i+j+k;   }
+
+int identity(int i) { return i; }
+
+int foo() { return printf("foo\n"); }
+
 int main(void) 
 {
   curried_printf("C++ Rocks! %d %f\n")(10)(20.30);
   curried_printf("C++ Rocks!\n");
+  arb_curry(foo);
+  std::cout << arb_curry(identity)(99) << std::endl;
+  auto a = arb_curry(add);
+  auto b = a(10);
+  auto c = b(20);
+  auto d = c(30);
+  std::cout << d << std::endl;
     
   return 0;
 }
