@@ -5,10 +5,10 @@
 #include <boost/core/demangle.hpp>
 
 template <char... chars>
-using stream = std::integer_sequence<char, chars...>;
+using CharSeq = std::integer_sequence<char, chars...>;
 
 template <typename T, T... chars>
-constexpr stream<chars...> operator""_stream() { return { }; }
+constexpr CharSeq<chars...> operator""_lift() { return { }; }
 
 template <class Head, class Tuple>
 struct Append;
@@ -19,46 +19,46 @@ struct Append<Head, std::tuple<Args...>>
   using type = std::tuple<Head, Args...>;
 };
 
-template <class IntegerSequence>
+template <class CharSeq>
 struct StringToTuple;
 
 template <>
-struct StringToTuple<std::integer_sequence<char>>
+struct StringToTuple<CharSeq<>>
 {
     using type = std::tuple<>;
 };
 
 template <char C, char... chars>
-struct StringToTuple<std::integer_sequence<char, C, chars...>>
+struct StringToTuple<CharSeq<C, chars...>>
 {
-    using type = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
+    using type = typename StringToTuple<CharSeq<chars...>>::type;
 };
 
 template <char... chars>
-struct StringToTuple<std::integer_sequence<char, '%', 's', chars...>>
+struct StringToTuple<CharSeq<'%', 's', chars...>>
 {
-    using tail = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
-    using type = typename Append<std::string, tail>::type;
+    using tail = typename StringToTuple<CharSeq<chars...>>::type;
+    using type = typename Append<const char *, tail>::type;
 };
 
 template <char... chars>
-struct StringToTuple<std::integer_sequence<char, '%', 'd', chars...>>
+struct StringToTuple<CharSeq<'%', 'd', chars...>>
 {
-    using tail = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
+    using tail = typename StringToTuple<CharSeq<chars...>>::type;
     using type = typename Append<int, tail>::type;
 };
 
 template <char... chars>
-struct StringToTuple<std::integer_sequence<char, '%', 'f', chars...>>
+struct StringToTuple<CharSeq<'%', 'f', chars...>>
 {
-    using tail = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
+    using tail = typename StringToTuple<CharSeq<chars...>>::type;
     using type = typename Append<double, tail>::type;
 };
 
 template <char... chars>
-struct StringToTuple<std::integer_sequence<char, '%', 'u', chars...>>
+struct StringToTuple<CharSeq<'%', 'u', chars...>>
 {
-    using tail = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
+    using tail = typename StringToTuple<CharSeq<chars...>>::type;
     using type = typename Append<unsigned int, tail>::type;
 };
 
@@ -96,19 +96,19 @@ struct curry<std::tuple<>>
     }
 };
 
-template <class IntSeq>
-auto curried_printf_impl(const char * const fmt, IntSeq)
+template <class CharSeq>
+auto curried_printf_impl(const char * const fmt, CharSeq)
 {
-  using FormatType = typename StringToTuple<IntSeq>::type;
+  using FormatType = typename StringToTuple<CharSeq>::type;
   std::cout << boost::core::demangle(typeid(FormatType).name()) << "\n";
   return curry<FormatType>::apply(fmt);  
 }
 
-#define curried_printf(X) curried_printf_impl(X, X##_stream)
+#define curried_printf(X) curried_printf_impl(X, X##_lift)
 
 int main(void) 
 {
-  curried_printf("C++ Rocks! %d %f\n")(10)(20.30);
+  curried_printf("C++ Rocks%s %d %f\n")(10)("10")(20.30);
   curried_printf("C++ Rocks!\n");
     
   return 0;

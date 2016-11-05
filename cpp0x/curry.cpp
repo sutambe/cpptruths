@@ -1,15 +1,14 @@
 #include <iostream>
-#include <string>
 #include <tuple>
 #include <memory>
 #include <type_traits>
 #include <boost/core/demangle.hpp>
 
 template <char... chars>
-using stream = std::integer_sequence<char, chars...>;
+using CharSeq = std::integer_sequence<char, chars...>;
 
 template <typename T, T... chars>
-constexpr stream<chars...> operator""_stream() { return { }; }
+constexpr CharSeq<chars...> operator""_lift() { return { }; }
 
 template <class Head, class Tuple>
 struct Append;
@@ -39,7 +38,7 @@ template <char... chars>
 struct StringToTuple<std::integer_sequence<char, '%', 's', chars...>>
 {
     using tail = typename StringToTuple<std::integer_sequence<char, chars...>>::type;
-    using type = typename Append<std::string, tail>::type;
+    using type = typename Append<const char *, tail>::type;
 };
 
 template <char... chars>
@@ -105,7 +104,7 @@ auto curried_printf_impl(const char * const fmt, IntSeq)
   return curry<FormatType>::apply(fmt);  
 }
 
-#define curried_printf(X) curried_printf_impl(X, X##_stream)
+#define curried_printf(X) curried_printf_impl(X, X##_lift)
 
 template <size_t... Indices, class Tuple, class Func>
 auto execute(std::integer_sequence<size_t, Indices...>,
