@@ -72,7 +72,7 @@ struct curry<std::tuple<Head, Tail...>>
     static auto apply(Args&&... args) 
     {
       return [args...](Head h) {
-          return curry<std::tuple<Tail...>>::apply(args..., h);
+          return curry<std::tuple<Tail...>>::apply(args..., std::move(h));
       };
     }
 };
@@ -108,7 +108,7 @@ auto curried_printf_impl(const char * const fmt, CharSeq)
 
 int main(void) 
 {
-  curried_printf("C++ Rocks%s %d %f\n")(10)("10")(20.30);
+  curried_printf("C++ Rocks%s %d %f\n")("!!")(10)(20.30);
   curried_printf("C++ Rocks!\n");
     
   return 0;

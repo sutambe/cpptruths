@@ -108,8 +108,8 @@ auto curried_printf_impl(const char * const fmt, IntSeq)
 
 template <size_t... Indices, class Tuple, class Func>
 auto execute(std::integer_sequence<size_t, Indices...>,
-             Tuple &tuple,
-             Func &&func)
+             Tuple& tuple,
+             Func&& func)
 {
   return func(std::get<Indices>(tuple)...);
 }
@@ -127,7 +127,7 @@ struct dyn_curry<I, AllArgs, std::tuple<Head, Tail...>>
     {
       return [shptr, func=std::move(func)](const Head &h) mutable {
         std::get<Index>(*shptr) = h;
-        return dyn_curry<I-1, AllArgs, std::tuple<Tail...>>::apply(shptr, func);
+        return dyn_curry<I-1, AllArgs, std::tuple<Tail...>>::apply(shptr, std::move(func));
       };
     }    
 };
@@ -143,7 +143,7 @@ struct dyn_curry<1, AllArgs, std::tuple<Head>>
     {
       return [shptr, func=std::move(func)](const Head &h) mutable {
         std::get<Index>(*shptr) = h;
-        return execute(IntSeq(), *shptr, func);
+        return execute(IntSeq(), *shptr, std::move(func));
       };
     }    
 };
