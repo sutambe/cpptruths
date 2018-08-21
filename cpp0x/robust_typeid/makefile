@@ -8,7 +8,9 @@ libfoo.so: foo.h foo.cpp
 
 robust_typeid: libfoo.so robust_typeid.cpp 
 # Assertion failure when __GXX_MERGED_TYPEINFO_NAMES is enabled without -rdynamic
-	$(CC) $(CPPFLAGS) -rdynamic -ldl -o robust_typeid robust_typeid.cpp
+# on RHEL7 clang++ 6.0 and g++ 4.8.5. MacOS+clang does not have this issue for
+# fast typeid
+	$(CC) $(CPPFLAGS) -ldl -o robust_typeid robust_typeid.cpp
 
 .PHONY: clean
 
