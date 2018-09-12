@@ -3,13 +3,14 @@
 #include <string>
 #include <unistd.h>
 #include <dlfcn.h>
+#include <cassert>
 #include <vector>
 
 #include "foo.h"
 
 using namespace test;
 
-int main(void) {
+void test_typeinfo() {
   char cwd[1024];
   getcwd(cwd, sizeof(cwd));
   std::string path = std::string(cwd) + "/libfoo.so";
@@ -24,7 +25,17 @@ int main(void) {
   
   if(handle)
     dlclose(handle);
+}
 
+void test_variable_template_linking() {
   Bar::v<Foo>.push_back(Foo{});
+  // if -rdynamic option is not provided
+  // the following assertion will fail.
+  assert(Bar::v<Foo>.size() == 2);
   std::cout << "size of v<Foo> = " << Bar::v<Foo>.size() << "\n";
+}
+
+int main(void) {
+  test_typeinfo();
+  test_variable_template_linking();
 }
