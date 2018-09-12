@@ -3,12 +3,20 @@
 
 namespace test {
 
-class Foo {
+struct Bar {
+  template <class T>
+  static std::vector<T> v;
+};
+
+template <class T>
+std::vector<T> Bar::v{};
+
+struct Foo {
   virtual ~Foo() = default;
 };
 
 }
-using namespace test;
+
 extern "C" void foo(const std::type_info &);
  
 #endif  // FOO_H

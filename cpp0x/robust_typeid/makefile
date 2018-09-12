@@ -1,5 +1,6 @@
 CC=clang++
-CPPFLAGS=-std=c++11 -D__GXX_MERGED_TYPEINFO_NAMES
+#CPPFLAGS=-std=c++11 -D__GXX_MERGED_TYPEINFO_NAMES
+CPPFLAGS=-std=c++14 
 
 all: libfoo.so robust_typeid
 
