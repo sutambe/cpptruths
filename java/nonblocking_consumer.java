@@ -14,11 +14,9 @@ private CompletableFuture<StreamSet> setupConsumptionNonBlocking(String topicNam
                      for(Range range: oldestRanges) {
                        positions.add(RangePosition.beginning(range));
                      }
-                     return topicConsumer.createStreamSet().subscribe(positions);
-                 })
-                 .thenCompose((SubscriptionResult result) -> {
-                     result.forEach((rangePosition, result) -> { assert result.isSuccess(); });
-                     return result.streamSet();
+                     StreamSet streamSet = topicConsumer.createStreamSet();
+                     streamSet.subscribe(positions);
+                     return streamSet;
                  });
 }
 
