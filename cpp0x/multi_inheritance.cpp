@@ -44,7 +44,7 @@ public:
   std::cout << "pd=" << pd << "\n";
 }
 
-void test2(void) {
+void virtual_inheritance_dynamic_cast_test(void) {
 class A
 {
     int a;
@@ -194,15 +194,15 @@ public:
   pd = static_cast<D*>(pc); 
   std::cout << "pd=" << pd << "\n";
     
-  void *v = pc;
-  Object *o = static_cast<Object *>(v);
-  pd = dynamic_cast<D *>(o);
-  std::cout << "o=" << o << ", from void* pd=" << pd << "\n";
+  Object *o = static_cast<Object *>(pc);
+  void *v = o;
+  pd = dynamic_cast<D *>(static_cast<Object *>(o));
+  std::cout << "v=" << v << ", o=" << o << ", from void* pd=" << pd << "\n";
 }
 
 int main(void) {
   //test1();   
-  test2();
+  // virtual_inheritance_dynamic_cast_test();
   //test3();
-  //test4();
+  test4();
 }
