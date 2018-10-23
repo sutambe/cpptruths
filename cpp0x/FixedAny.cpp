@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <cstring>
+#include <optional>
 
 int test_count = 0;
 
@@ -284,6 +285,9 @@ int main(void) {
     FixedAny<> any7(small_trivial_arr);
     FixedAny<> any8(t2); any8 = small_trivial_arr;
     any1 = std::make_shared<Test>();
+    std::optional<FixedAny<>> optany1;
+    std::optional<FixedAny<>> optany2(any7);
+    std::optional<FixedAny<>> optany3 = any8;
 
     //FixedAny<> compiler_error1("******************************************** large ******************************************");
     //FixedAny<32> compiler_error2(bigany);
