@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.12)
-set(MY_PROJECT_DEPENDENCIES boost-core boost-optional)
+set(MY_PROJECT_DEPENDENCIES boost-core boost-optional boost-filesystem)
 
 if(NOT DEFINED ${CMAKE_TOOLCHAIN_FILE})
   if(NOT DEFINED ENV{VCPKG_ROOT})
@@ -15,7 +15,13 @@ if(NOT DEFINED ${CMAKE_TOOLCHAIN_FILE})
   if(NOT EXISTS ${VCPKG_ROOT})
     message("Cloning vcpkg in ${VCPKG_ROOT}")
     execute_process(COMMAND git clone https://github.com/Microsoft/vcpkg.git ${VCPKG_ROOT})
-    execute_process(COMMAND git checkout 52870c7595a63ade069ae51d5f4ee3a85fe4123f WORKING_DIRECTORY ${VCPKG_ROOT})
+    # If a reproducible build is desired (and potentially old libraries are # ok), uncomment the
+    # following line and pin the vcpkg repository to a specific githash.
+    # execute_process(COMMAND git checkout 745a0aea597771a580d0b0f4886ea1e3a94dbca6 WORKING_DIRECTORY ${VCPKG_ROOT})
+  else()
+    # The following command has no effect if the vcpkg repository is in a detached head state.
+    message("Auto-updating vcpkg in ${VCPKG_ROOT}")
+    execute_process(COMMAND git pull WORKING_DIRECTORY ${VCPKG_ROOT})
   endif()
 
   if(NOT EXISTS ${VCPKG_ROOT}/README.md)
@@ -47,10 +53,11 @@ endif()
 
 project (vcpkg_test CXX)
 set(CMAKE_CXX_STANDARD 17)
-find_package(Boost 1.67 REQUIRED)
+find_package(Boost 1.67 REQUIRED COMPONENTS filesystem)
 
 add_executable(driver src/driver.cpp)
 target_include_directories(driver PUBLIC ${Boost_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/include )
+target_link_libraries(driver ${Boost_LIBRARIES})
 
 enable_testing()
 include(CTest)
